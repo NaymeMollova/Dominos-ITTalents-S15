@@ -6,4 +6,5 @@ package ittalents.dominos.model.repositories;
 public interface UserRepository extends JpaRepository<User, Integer> {
 
 
+    boolean existsByEmail(String email);
 }
