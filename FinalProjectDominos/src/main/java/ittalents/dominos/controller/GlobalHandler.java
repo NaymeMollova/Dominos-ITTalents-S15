@@ -1,5 +1,6 @@
 package ittalents.dominos.controller;
 
+import lombok.Builder;
 import ittalents.dominos.model.DTOs.ErrorDTO;
 import ittalents.dominos.model.exceptions.BadRequestException;
 import ittalents.dominos.model.exceptions.NotFoundException;
@@ -32,7 +33,6 @@ public class GlobalHandler extends ResponseEntityExceptionHandler {
     public ErrorDTO handleAllOthers(Exception e){
         return generateErrorDTO(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value());
     }
-
     private ErrorDTO generateErrorDTO(String msg, int code){
         return ErrorDTO.builder()
                 .msg(msg)
