@@ -1,5 +1,6 @@
 package ittalents.dominos.controller;
 
+import ittalents.dominos.model.DTOs.CategoryWithoutIdDTO;
 import ittalents.dominos.model.entities.Category;
 import ittalents.dominos.service.CategoryService;
 import jakarta.servlet.http.HttpSession;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class CategoryController extends AbstractController {
@@ -59,9 +61,14 @@ public class CategoryController extends AbstractController {
 
     //VIEW ALL CATEGORIES
     @GetMapping("/dominos/categories")
-    public List<Category> viewAllCategories() {
-        return categoryService.findAllCategories();
+    public List<CategoryWithoutIdDTO> viewAllCategories() {
+        List<Category> categories = categoryService.findAllCategories();
+        return categories.stream()
+                .map(category -> new CategoryWithoutIdDTO(category.getCategoryName()))
+                .collect(Collectors.toList());
     }
+
+
 
 
 }

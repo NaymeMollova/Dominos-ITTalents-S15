@@ -60,6 +60,8 @@ public class CategoryService extends AbstractService {
     public List<Category> findAllCategories() {
         return categoryRepository.findAll();
     }
+
+
 }
 
 
