@@ -12,6 +12,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Service
 public class UserService extends AbstractService {
@@ -21,22 +23,15 @@ public class UserService extends AbstractService {
 
 
     public UserWithoutPassDTO register(UserRegisterDTO register) {
-        if(!register.getFirstName().startsWith("^[A-Z].*")) { //regex for upper case
-            throw new BadRequestException("First name must be starts with upper case");
-        }
-        if(!register.getLastName().startsWith("^[A-Z].*")){   //regex for upper case
-            throw new BadRequestException("Last name must be starts with upper case");
-        }
 
-        if(!register.getPassword().equals(register.getConfirmPassword())){
-            throw new BadRequestException("Passwords mismatch!");
-    }
-        if(!register.getPassword().matches(register.getConfirmPassword())){
-            throw new BadRequestException("Weak password!");
-        }
         if(userRepository.existsByEmail(register.getEmail())){
             throw new BadRequestException("Email already exists!");
         }
+
+        if(!register.getPassword().equals(register.getConfirmPassword())) {
+            throw new BadRequestException("Passwords mismatch!");
+        }
+
         User u = mapper.map(register, User.class);
         u.setPassword(encoder.encode(u.getPassword()));
         userRepository.save(u);
