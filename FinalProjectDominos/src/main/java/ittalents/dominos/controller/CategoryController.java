@@ -3,7 +3,7 @@ package ittalents.dominos.controller;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class CategoryController {
+public class CategoryController extends AbstractController {
 //    @Autowired
 //    private CategoryService categoryService;
 //
@@ -27,13 +27,7 @@ public class CategoryController {
 //        String categoryName = category_name.get("category_name");
 //        return categoryService.editCategory(id, categoryName);
 //    }
-
-
 }
 
-<<<<<<< HEAD
-=======
 
 
-
->>>>>>> 5b443fd058749983440b4cde4b0e97697344d84b
