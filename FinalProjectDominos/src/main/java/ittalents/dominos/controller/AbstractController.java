@@ -1,4 +1,5 @@
 package ittalents.dominos.controller;
+<<<<<<< HEAD
 
 import ittalents.dominos.model.DTOs.ErrorDTO;
 import ittalents.dominos.model.exceptions.BadRequestException;
@@ -29,6 +30,7 @@ public abstract class AbstractController {
     public ErrorDTO handleNotFound(Exception e){
         return generateErrorDTO(e, HttpStatus.NOT_FOUND);
     }
+<<<<<<<< HEAD:FinalProjectDominos/src/main/java/ittalents/dominos/controller/AbstractController.java
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -37,6 +39,9 @@ public abstract class AbstractController {
     }
 
     private ErrorDTO generateErrorDTO(Exception e, HttpStatus s){
+========
+    private ErrorDTO generateErrorDTO(String msg, int code){
+>>>>>>>> 3112f666903c686707e41d378329fe900f8d2a0f:FinalProjectDominos/src/main/java/ittalents/dominos/controller/GlobalHandler.java
         return ErrorDTO.builder()
                 .msg(e.getMessage())
                 .time(LocalDateTime.now())
@@ -44,10 +49,20 @@ public abstract class AbstractController {
                 .build();
     }
 
+=======
+import ittalents.dominos.model.exceptions.UnauthorizedException;
+import jakarta.servlet.http.HttpSession;
+
+public class AbstractController {
+>>>>>>> 3112f666903c686707e41d378329fe900f8d2a0f
     protected int getLoggedId(HttpSession s){
         if(s.getAttribute("LOGGED_ID") == null){
             throw new UnauthorizedException("You have to login first");
         }
         return (int) s.getAttribute("LOGGED_ID");
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 3112f666903c686707e41d378329fe900f8d2a0f
