@@ -8,7 +8,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,38 +24,28 @@ public abstract class AbstractController {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ErrorDTO handleUnauthorized(Object o){
         return generateErrorDTO(o, HttpStatus.UNAUTHORIZED);
-
     }
+
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorDTO handleNotFound(Object o){
         return generateErrorDTO(o, HttpStatus.NOT_FOUND);
     }
 
-
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorDTO handleRest(Object o){
+    public ErrorDTO handleRest(Object o) {
         return generateErrorDTO(o, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    private ErrorDTO generateErrorDTO(Object e, HttpStatus s){
-        return generateErrorDTO(e, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ErrorDTO handleRest(Exception e) {
-        return generateErrorDTO(e, HttpStatus.INTERNAL_SERVER_ERROR);
-    }
-
-    private ErrorDTO generateErrorDTO(Exception e, HttpStatus s) {
+    private ErrorDTO generateErrorDTO(Object o, HttpStatus s) {
         return ErrorDTO.builder()
-                .msg(e)
+                .msg(o)
                 .time(LocalDateTime.now())
                 .status(s.value())
                 .build();
     }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ErrorDTO handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
@@ -67,6 +56,5 @@ public abstract class AbstractController {
         });
         return generateErrorDTO(errors, HttpStatus.BAD_REQUEST);
     }
-
 }
 

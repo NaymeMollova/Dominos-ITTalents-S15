@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class CategoryController extends AbstractController {
+
 //    @Autowired
 //    private CategoryService categoryService;
 //
@@ -21,6 +22,15 @@ public class CategoryController extends AbstractController {
 //        }
 //        return category;
 //    }
+
+
+//    @PutMapping("dominos/categories/{id}")
+//    public Category edit(@PathVariable int id, @RequestBody Map<String, String> category_name) {
+//        String categoryName = category_name.get("category_name");
+//        return categoryService.editCategory(id, categoryName);
+//    }
+
+
 
 //    @PutMapping("dominos/categories/{id}")
 //    public Category edit(@PathVariable int id, @RequestBody Map<String, String> category_name) {

@@ -15,6 +15,7 @@ public class UserController extends AbstractController  {
 
     @Autowired
     private UserService userService;
+
     @PostMapping("/dominos/users")
     public UserWithoutPassDTO register(@Valid @RequestBody UserRegisterDTO dto){
         return userService.register(dto);

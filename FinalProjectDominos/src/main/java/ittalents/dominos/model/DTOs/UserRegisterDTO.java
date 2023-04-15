@@ -1,5 +1,7 @@
 package ittalents.dominos.model.DTOs;
 
+//import jakarta.validation.constraints.Email;
+//import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
