@@ -4,10 +4,6 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
-<<<<<<< HEAD
-@Getter
-=======
->>>>>>> f91c6bcfd99d704e7e8ff0fdbaf8b25e3ba8d261
 @Setter
 @Getter
 @NoArgsConstructor
@@ -15,7 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 public class ErrorDTO {
 
-    private String msg;
+    private Object msg;
     private int status;
     private LocalDateTime time;
 }
