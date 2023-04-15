@@ -6,16 +6,13 @@ import ittalents.dominos.model.entities.User;
 import ittalents.dominos.model.exceptions.BadRequestException;
 import ittalents.dominos.model.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
 
 
-    private BCryptPasswordEncoder encoder;
+  //  private BCryptPasswordEncoder encoder;
     private UserRepository userRepository;
     private ModelMapper mapper;
 
@@ -30,7 +27,7 @@ public class UserService {
             throw new BadRequestException("Email already exists!");
         }
         User u = mapper.map(registerDTO, User.class);
-        u.setPassword(encoder.encode(u.getPassword()));
+      //  u.setPassword(encoder.encode(u.getPassword()));
         userRepository.save(u);
         return mapper.map(u, UserWithoutPassDTO.class);
     }
