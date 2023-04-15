@@ -14,5 +14,5 @@ public class Category {
     private int id;
 
     @Column(name = "category_name")
-    private String category_name;
+    private String categoryName;
 }
