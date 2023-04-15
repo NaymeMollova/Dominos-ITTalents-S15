@@ -14,6 +14,8 @@ public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    @Autowired
+    private ModelMapper modelMapper;
 
     public Category save(Category category) {
         return categoryRepository.save(category);
@@ -23,7 +25,7 @@ public class CategoryService {
     public Category findById(int id) {
         Optional<Category> c = categoryRepository.findById(id);
         if(c.isPresent()){
-            return modelMapper().map(c.get(), Category.class);
+            return modelMapper.map(c.get(), Category.class);
         }
         throw new NotFoundException("Category not found");
     }
