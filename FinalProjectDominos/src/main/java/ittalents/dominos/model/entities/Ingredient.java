@@ -11,10 +11,8 @@ public class Ingredient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
     @Column(name = "name")
     private String name;
-
     @Column(name = "price")
-    private BigDecimal price;
+    private double price;
 }

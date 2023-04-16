@@ -93,4 +93,7 @@ public class UserService extends AbstractService {
                 .map( u -> mapper.map(u, UserWithoutPassDTO.class))
                 .collect(Collectors.toList());
     }
+    public User findLoggedUser(int userId) {
+        return userRepository.getReferenceById(userId);
+    }
 }

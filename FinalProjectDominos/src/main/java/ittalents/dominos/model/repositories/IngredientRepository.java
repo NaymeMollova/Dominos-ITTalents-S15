@@ -1,4 +1,7 @@
 package ittalents.dominos.model.repositories;
 
-public class IngredientRepository {
+import ittalents.dominos.model.entities.Ingredient;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface IngredientRepository extends JpaRepository<Ingredient, Integer> {
 }

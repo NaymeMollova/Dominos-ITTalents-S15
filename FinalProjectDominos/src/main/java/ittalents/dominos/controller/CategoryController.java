@@ -2,7 +2,7 @@ package ittalents.dominos.controller;
 
 import ittalents.dominos.model.DTOs.CategoryWithoutIdDTO;
 import ittalents.dominos.model.entities.Category;
-import ittalents.dominos.service.CategoryService;
+//import ittalents.dominos.service.CategoryService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public class CategoryController extends AbstractController {
 
     @Autowired
-    private CategoryService categoryService;
+    //private CategoryService categoryService;
 
     //ADD CATEGORY
     @PostMapping("/dominos/categories")
@@ -26,7 +26,6 @@ public class CategoryController extends AbstractController {
         } else {
             throw e;
         }
-    }
 
     //DELETE CATEGORY
     @DeleteMapping("/dominos/categories/{id}")
@@ -51,6 +50,10 @@ public class CategoryController extends AbstractController {
         }
         String categoryName = category.getCategoryName();
         return categoryService.editCategory(id, categoryName);
+
+    public Category edit(@PathVariable int id, @RequestBody Map<String, String> categoryName) {
+        String category = categoryName.get("categoryName");
+        return categoryService.editCategory(id, category);
     }
 
     //VIEW CATEGORY
@@ -70,9 +73,7 @@ public class CategoryController extends AbstractController {
 
 
 
-
+    }
 }
-
-
 
 
