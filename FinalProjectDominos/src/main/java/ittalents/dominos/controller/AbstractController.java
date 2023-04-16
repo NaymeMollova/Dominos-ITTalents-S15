@@ -1,11 +1,12 @@
 package ittalents.dominos.controller;
 
 import ittalents.dominos.model.DTOs.ErrorDTO;
-import ittalents.dominos.model.entities.User;
 import ittalents.dominos.model.exceptions.BadRequestException;
 import ittalents.dominos.model.exceptions.NotFoundException;
 import ittalents.dominos.model.exceptions.UnauthorizedException;
+import ittalents.dominos.service.UserService;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -17,6 +18,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class AbstractController {
+    @Autowired
+    protected UserService userService;
 
     @ExceptionHandler(BadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -62,30 +65,33 @@ public abstract class AbstractController {
         return generateErrorDTO(errors, HttpStatus.BAD_REQUEST);
     }
 
-    protected RuntimeException isAdminLoggedIn(HttpSession session) {
-        if (!isThereLoggedInUser(session)) {
-            return new UnauthorizedException("You have to log in first");
+    protected boolean isAdminLoggedIn(HttpSession session) {
+        if (!isUserLoggedIn(session)) {
+            throw new UnauthorizedException("You have to log in first");
         }
-        User user = findLoggedUser(session);
-        if (user == null) {
-            return new UnauthorizedException("You have to log in first");
-        }
-        if (!user.isAdmin()) {
-            return new UnauthorizedException("You need to be an admin to perform this action");
-        }
-        return null;
+//        int userId = (int) session.getAttribute("LOGGED_ID");
+//        if (!userService.findLoggedUser(userId).isAdmin()) {
+//            return false;
+//        }
+        return true;
     }
-    private boolean isThereLoggedInUser(HttpSession session){
-        if (session.getAttribute("LOGGED_ID") == null) {
+
+    protected boolean isUserLoggedIn(HttpSession session) {
+        if (!isThereLoggedInUser(session)) {
+            return false;
+        }
+        int userId = (int) session.getAttribute("LOGGED_ID");
+        if (userService.findLoggedUser(userId) == null) {
             return false;
         }
         return true;
     }
-    private User findLoggedUser(HttpSession session){
-        return (User) session.getAttribute("LOGGED_USER");
 
+    private boolean isThereLoggedInUser(HttpSession session) {
+        if (session.getAttribute("LOGGED") == null) {
+            return false;
+        }
+        return true;
     }
-
-
 }
 
