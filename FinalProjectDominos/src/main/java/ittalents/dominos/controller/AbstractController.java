@@ -63,10 +63,10 @@ public abstract class AbstractController {
     }
 
     protected RuntimeException isAdminLoggedIn(HttpSession session) {
-        if (session.getAttribute("LOGGED_ID") == null) {
+        if (!isThereLoggedInUser(session)) {
             return new UnauthorizedException("You have to log in first");
         }
-        User user = (User) session.getAttribute("LOGGED_USER");
+        User user = findLoggedUser(session);
         if (user == null) {
             return new UnauthorizedException("You have to log in first");
         }
@@ -75,5 +75,17 @@ public abstract class AbstractController {
         }
         return null;
     }
+    private boolean isThereLoggedInUser(HttpSession session){
+        if (session.getAttribute("LOGGED_ID") == null) {
+            return false;
+        }
+        return true;
+    }
+    private User findLoggedUser(HttpSession session){
+        return (User) session.getAttribute("LOGGED_USER");
+
+    }
+
+
 }
 
