@@ -85,7 +85,7 @@ public class UserController extends AbstractController {
         }
     }
     @GetMapping("/dominos/users")
-    public List<UserWithoutPassDTO> getAll(){
+    public List<UserWithoutPassDTO> getAll() {
         return userService.getAll();
     }
 }

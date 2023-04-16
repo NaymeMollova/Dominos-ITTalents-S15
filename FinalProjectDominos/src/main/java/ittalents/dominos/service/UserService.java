@@ -32,8 +32,10 @@ public class UserService extends AbstractService {
         if(!register.getPassword().equals(register.getConfirmPassword())) {
             throw new BadRequestException("Passwords mismatch!");
         }
+
         User u = mapper.map(register, User.class);
         u.setPassword(encoder.encode(u.getPassword()));
+        u.setAdmin(true);
         userRepository.save(u);
         return mapper.map(u, UserWithoutPassDTO.class);
     }
@@ -56,6 +58,7 @@ public class UserService extends AbstractService {
                 user.setLastName(dto.getLastName());
                 user.setPhoneNumber(dto.getPhoneNumber());
                 user.setEmail(dto.getEmail());
+
 
                 userRepository.save(user);
                 return mapper.map(user, UserWithoutPassDTO.class);
@@ -89,5 +92,8 @@ public class UserService extends AbstractService {
                 .stream()
                 .map( u -> mapper.map(u, UserWithoutPassDTO.class))
                 .collect(Collectors.toList());
+    }
+    public User findLoggedUser(int userId) {
+        return userRepository.getReferenceById(userId);
     }
 }

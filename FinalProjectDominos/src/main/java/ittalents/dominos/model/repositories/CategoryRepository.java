@@ -9,7 +9,7 @@ import java.util.Optional;
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
 
-   // @Override
+
     Category save(Category categoryName);
 
     Optional<Category> findByCategoryName(String categoryName);

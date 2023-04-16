@@ -1,6 +1,7 @@
 package ittalents.dominos.controller;
 
 import ittalents.dominos.model.DTOs.ErrorDTO;
+import ittalents.dominos.model.entities.User;
 import ittalents.dominos.model.exceptions.BadRequestException;
 import ittalents.dominos.model.exceptions.NotFoundException;
 import ittalents.dominos.model.exceptions.UnauthorizedException;
@@ -23,19 +24,19 @@ public abstract class AbstractController {
 
     @ExceptionHandler(BadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorDTO handleBadRequest(Exception e) {
+    public ErrorDTO handleBadRequest(Exception e){
         return generateErrorDTO(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UnauthorizedException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ErrorDTO handleUnauthorized(Exception e) {
+    public ErrorDTO handleUnauthorized(Exception e){
         return generateErrorDTO(e.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorDTO handleNotFound(Exception e) {
+    public ErrorDTO handleNotFound(Exception e){
         return generateErrorDTO(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
@@ -93,5 +94,6 @@ public abstract class AbstractController {
         }
         return true;
     }
+
 }
 

@@ -9,11 +9,11 @@ import lombok.Setter;
 @Getter
 @Entity(name = "categories")
 @NoArgsConstructor
+
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
     @Column(name = "category_name")
     private String categoryName;
 
