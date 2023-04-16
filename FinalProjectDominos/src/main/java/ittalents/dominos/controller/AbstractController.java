@@ -69,10 +69,10 @@ public abstract class AbstractController {
         if (!isUserLoggedIn(session)) {
             throw new UnauthorizedException("You have to log in first");
         }
-//        int userId = (int) session.getAttribute("LOGGED_ID");
-//        if (!userService.findLoggedUser(userId).isAdmin()) {
-//            return false;
-//        }
+        int userId = (int) session.getAttribute("LOGGED_ID");
+        if (!userService.findLoggedUser(userId).isAdmin()) {
+            return false;
+        }
         return true;
     }
 

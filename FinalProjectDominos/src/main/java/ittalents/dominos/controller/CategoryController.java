@@ -2,6 +2,7 @@ package ittalents.dominos.controller;
 
 import ittalents.dominos.model.DTOs.CategoryWithoutIdDTO;
 import ittalents.dominos.model.entities.Category;
+import ittalents.dominos.model.exceptions.UnauthorizedException;
 import ittalents.dominos.service.CategoryService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,21 +20,19 @@ public class CategoryController extends AbstractController {
     //ADD CATEGORY
     @PostMapping("/dominos/categories")
     public Category addCategory(@RequestBody Category categoryName, HttpSession session) {
-        RuntimeException e = isAdminLoggedIn(session);
-        if (e == null) {
-            Category savedCategory = categoryService.save(categoryName);
-            return savedCategory;
+        if (isAdminLoggedIn(session)) {
+            categoryService.save(categoryName);
+            return categoryName;
         } else {
-            throw e;
+            throw new UnauthorizedException("You need to be an admin to perform this action");
         }
     }
 
     //DELETE CATEGORY
     @DeleteMapping("/dominos/categories/{id}")
     public Category deleteCategory(@PathVariable("id") int id, HttpSession session) {
-        RuntimeException e = isAdminLoggedIn(session);
-        if (e != null) {
-            throw e;
+        if (!isAdminLoggedIn(session)) {
+            throw new UnauthorizedException("You need to be an admin to perform this action");
         }
         Category category = categoryService.findById(id);
         if (category != null) {
@@ -45,9 +44,8 @@ public class CategoryController extends AbstractController {
     //EDIT CATEGORY
     @PutMapping("dominos/categories/{id}")
     public Category edit(@PathVariable int id, @RequestBody Category category, HttpSession session) {
-        RuntimeException e = isAdminLoggedIn(session);
-        if (e != null) {
-            throw e;
+        if (!isAdminLoggedIn(session)) {
+            throw new UnauthorizedException("You need to be an admin to perform this action");
         }
         String categoryName = category.getCategoryName();
         return categoryService.editCategory(id, categoryName);
@@ -67,8 +65,6 @@ public class CategoryController extends AbstractController {
                 .map(category -> new CategoryWithoutIdDTO(category.getCategoryName()))
                 .collect(Collectors.toList());
     }
-
-
 
 
 }

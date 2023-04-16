@@ -4,6 +4,7 @@ import ittalents.dominos.model.entities.Category;
 import ittalents.dominos.model.exceptions.BadRequestException;
 import ittalents.dominos.model.exceptions.NotFoundException;
 import ittalents.dominos.model.repositories.CategoryRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Transactional
 public class CategoryService extends AbstractService {
     @Autowired
     private CategoryRepository categoryRepository;
