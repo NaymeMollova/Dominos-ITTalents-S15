@@ -2,7 +2,6 @@ package ittalents.dominos.controller;
 
 import ittalents.dominos.model.DTOs.CategoryWithoutIdDTO;
 import ittalents.dominos.model.entities.Category;
-import ittalents.dominos.model.exceptions.UnauthorizedException;
 import ittalents.dominos.service.CategoryService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,35 +19,23 @@ public class CategoryController extends AbstractController {
     //ADD CATEGORY
     @PostMapping("/dominos/categories")
     public Category addCategory(@RequestBody Category categoryName, HttpSession session) {
-        if (isAdminLoggedIn(session)) {
-            categoryService.saveCategory(categoryName);
-            return categoryName;
-        } else {
-            throw new UnauthorizedException("You need to be an admin to perform this action");
-        }
+        isAdminLoggedIn(session);
+        return categoryService.saveCategory(categoryName);
     }
 
-    //DELETE CATEGORY
+    // DELETE CATEGORY
     @DeleteMapping("/dominos/categories/{id}")
     public Category deleteCategory(@PathVariable("id") int id, HttpSession session) {
-        if (!isAdminLoggedIn(session)) {
-            throw new UnauthorizedException("You need to be an admin to perform this action");
-        }
-        Category category = categoryService.findById(id);
-        if (category != null) {
-            categoryService.delete(id);
-        }
-        return category;
+        isAdminLoggedIn(session);
+        return categoryService.deleteCategory(id);
     }
+
 
     //EDIT CATEGORY
     @PutMapping("dominos/categories/{id}")
-    public Category edit(@PathVariable int id, @RequestBody Category category, HttpSession session) {
-        if (!isAdminLoggedIn(session)) {
-            throw new UnauthorizedException("You need to be an admin to perform this action");
-        }
-        String categoryName = category.getCategoryName();
-        return categoryService.editCategory(id, categoryName);
+    public CategoryWithoutIdDTO edit(@PathVariable int id, @RequestBody CategoryWithoutIdDTO categoryDTO, HttpSession session) {
+        isAdminLoggedIn(session);
+        return categoryService.editCategory(id, categoryDTO.getCategoryName());
     }
 
     //VIEW CATEGORY
