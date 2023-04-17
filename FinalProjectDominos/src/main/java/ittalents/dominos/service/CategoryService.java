@@ -1,11 +1,11 @@
 package ittalents.dominos.service;
 
+import ittalents.dominos.model.DTOs.CategoryWithoutIdDTO;
 import ittalents.dominos.model.entities.Category;
 import ittalents.dominos.model.exceptions.BadRequestException;
 import ittalents.dominos.model.exceptions.NotFoundException;
 import ittalents.dominos.model.repositories.CategoryRepository;
 import jakarta.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,13 +19,12 @@ public class CategoryService extends AbstractService {
     private CategoryRepository categoryRepository;
 
     public Category saveCategory(Category categoryName) {
-        Optional<Category> existingCategory = (categoryRepository.findByCategoryName(categoryName.getCategoryName()));
+        Optional<Category> existingCategory = categoryRepository.findByCategoryName(categoryName.getCategoryName());
         if (existingCategory.isPresent()) {
             throw new BadRequestException("Category already exists");
         }
         return categoryRepository.save(categoryName);
     }
-
 
     public Category findById(int id) {
         Optional<Category> c = categoryRepository.findById(id);
@@ -36,11 +35,7 @@ public class CategoryService extends AbstractService {
         }
     }
 
-    public void delete(int id) {
-        categoryRepository.deleteById(id);
-    }
-
-    public Category editCategory(int id, String newCategoryName) {
+    public CategoryWithoutIdDTO editCategory(int id, String newCategoryName) {
         // Finding the category to be edited by its ID
         Optional<Category> categoryOptional = categoryRepository.findById(id);
         if (categoryOptional.isPresent()) {
@@ -55,13 +50,22 @@ public class CategoryService extends AbstractService {
                 }
             }
             category.setCategoryName(newCategoryName);
-            return categoryRepository.save(category);
+            Category updatedCategory = categoryRepository.save(category);
+            return new CategoryWithoutIdDTO(updatedCategory.getCategoryName());
         }
         throw new NotFoundException("Category with id " + id + " does not exist.");
     }
 
+
     public List<Category> findAllCategories() {
         return categoryRepository.findAll();
+    }
+
+
+    public Category deleteCategory(int id) {
+        Category category = findById(id);
+        categoryRepository.deleteById(id);
+        return category;
     }
 }
 
