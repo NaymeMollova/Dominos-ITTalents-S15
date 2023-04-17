@@ -27,12 +27,12 @@ public abstract class AbstractService {
     protected User getUserById(int id){
         return userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
     }
-    protected Product getProductById(int id){
+    public Product getProductById(int id){
         return productRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("Product not found")
         );
     }
-    public Category getCategoryId(int id){
+    public Category getCategoryById(int id){
         return categoryRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("Category not found")
         );

@@ -20,6 +20,7 @@ public class Category {
     private String categoryName;
 
     //cascade - указва, че при изтриване на категория всички продукти ще се изтрият
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+   // @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "category")
     private List<Product> products;
 }
