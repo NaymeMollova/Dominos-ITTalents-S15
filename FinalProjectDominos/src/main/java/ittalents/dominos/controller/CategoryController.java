@@ -21,7 +21,7 @@ public class CategoryController extends AbstractController {
     @PostMapping("/dominos/categories")
     public Category addCategory(@RequestBody Category categoryName, HttpSession session) {
         if (isAdminLoggedIn(session)) {
-            categoryService.save(categoryName);
+            categoryService.saveCategory(categoryName);
             return categoryName;
         } else {
             throw new UnauthorizedException("You need to be an admin to perform this action");

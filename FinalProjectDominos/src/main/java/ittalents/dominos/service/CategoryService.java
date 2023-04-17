@@ -5,6 +5,7 @@ import ittalents.dominos.model.exceptions.BadRequestException;
 import ittalents.dominos.model.exceptions.NotFoundException;
 import ittalents.dominos.model.repositories.CategoryRepository;
 import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +18,8 @@ public class CategoryService extends AbstractService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    public Category save(Category categoryName) {
-        Optional<Category> existingCategory = categoryRepository.findByCategoryName(categoryName.getCategoryName());
+    public Category saveCategory(Category categoryName) {
+        Optional<Category> existingCategory = (categoryRepository.findByCategoryName(categoryName.getCategoryName()));
         if (existingCategory.isPresent()) {
             throw new BadRequestException("Category already exists");
         }
@@ -62,8 +63,8 @@ public class CategoryService extends AbstractService {
     public List<Category> findAllCategories() {
         return categoryRepository.findAll();
     }
-
 }
+
 
 
 

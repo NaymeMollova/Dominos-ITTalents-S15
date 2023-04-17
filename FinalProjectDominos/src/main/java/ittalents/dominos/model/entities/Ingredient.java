@@ -3,6 +3,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
 
 @Setter
 @Getter
@@ -15,4 +17,6 @@ public class Ingredient {
     private String name;
     @Column(name = "price")
     private double price;
+    @ManyToMany(mappedBy = "ingredients")
+    private Set<Pizza> pizzas = new HashSet<>();
 }

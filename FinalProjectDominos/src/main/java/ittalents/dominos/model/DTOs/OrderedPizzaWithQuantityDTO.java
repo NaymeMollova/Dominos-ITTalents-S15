@@ -10,6 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 
 public class OrderedPizzaWithQuantityDTO {
+
     private OrderedPizza pizza;
     private int quantity;
 }

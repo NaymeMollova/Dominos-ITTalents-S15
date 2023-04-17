@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Setter
 @Getter
 @Entity(name = "categories")
@@ -17,4 +19,7 @@ public class Category {
     @Column(name = "category_name")
     private String categoryName;
 
+    //cascade - указва, че при изтриване на категория всички продукти ще се изтрият
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    private List<Product> products;
 }

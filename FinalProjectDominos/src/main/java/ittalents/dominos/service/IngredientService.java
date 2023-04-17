@@ -6,6 +6,7 @@ import ittalents.dominos.model.DTOs.UserWithoutPassDTO;
 import ittalents.dominos.model.entities.Ingredient;
 import ittalents.dominos.model.entities.User;
 import ittalents.dominos.model.exceptions.NotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.data.relational.core.sql.In;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class IngredientService extends AbstractService {
 
     public Ingredient editIngredient(Ingredient old, IngredientDTO newIngredient){
@@ -50,5 +52,12 @@ public class IngredientService extends AbstractService {
                 .collect(Collectors.toList());
     }
 
-
+    public Ingredient findById(int id) {
+        Optional<Ingredient> c = ingredientRepository.findById(id);
+        if (c.isPresent()) {
+            return mapper.map(c.get(), Ingredient.class);
+        } else {
+            throw new NotFoundException("Ingredient not found");
+        }
+    }
 }

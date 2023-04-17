@@ -11,6 +11,7 @@ import ittalents.dominos.model.repositories.IngredientRepository;
 import ittalents.dominos.service.IngredientService;
 import ittalents.dominos.service.UserService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.relational.core.sql.In;
@@ -32,13 +33,13 @@ public class IngredientController extends AbstractController {
     @PostMapping("/dominos/ingredients")
     public IngredientDTO addIngredient(@RequestBody IngredientDTO dto, HttpSession s) {
         if (isAdminLoggedIn(s)) {
-            int loggedId = (int) s.getAttribute("LOGGED_ID");
+            int loggedId = getLoggedId(s);
             return ingredientService.addIngredient(dto, loggedId);
         } else{
             throw new UnauthorizedException("ala bala");
         }
     }
-
+    @DeleteMapping("dominos/ingredients/{id}")
     public void deleteIngredient(@PathVariable("id") int id, HttpSession s){
             if(isAdminLoggedIn(s)){
                 Ingredient ingredient = ingredientService.findById(id);
@@ -51,14 +52,13 @@ public class IngredientController extends AbstractController {
         }
 
 
-    @GetMapping("/dominos/categories/{id}")
+    @GetMapping("/dominos/ingredients/{id}")
     public IngredientDTO viewIngredient(@PathVariable("id") int id){
         IngredientDTO ingredientDTO = ingredientService.viewIngredient(id);
         return ingredientDTO;
     }
     @PutMapping("/dominos/ingredients/{id}")
     public Ingredient editIngredient(@PathVariable("id") int id, IngredientDTO ingredientDTO, HttpSession s){
-       // RuntimeException exception = isAdminLoggedIn(s);
         Optional<Ingredient> i = ingredientRepository.findById(id);
         if(!i.isPresent()){
             throw new NotFoundException("Ingredient is not found");

@@ -4,6 +4,7 @@ import ittalents.dominos.model.exceptions.BadRequestException;
 import ittalents.dominos.model.exceptions.UnauthorizedException;
 import ittalents.dominos.service.UserService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
