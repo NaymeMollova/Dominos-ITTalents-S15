@@ -7,10 +7,9 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ProductWithoutImageDTO {
+public class PizzaDTO {
 
-    //private int id;
+    private int id;
     private String name;
     private double price;
-   // private int categoryId;
 }

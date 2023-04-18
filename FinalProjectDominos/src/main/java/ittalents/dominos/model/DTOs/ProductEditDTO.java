@@ -7,10 +7,10 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ProductWithoutImageDTO {
+public class ProductEditDTO {
 
-    //private int id;
     private String name;
     private double price;
-   // private int categoryId;
+    private int categoryId;
+    private String image;
 }

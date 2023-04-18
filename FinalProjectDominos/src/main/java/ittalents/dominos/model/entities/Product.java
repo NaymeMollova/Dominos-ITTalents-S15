@@ -17,8 +17,8 @@ public class Product {
     private String name;
     @Column(name = "price")
     private double price;
-    @Column(name = "image")
-    private String image;
+//    @Column(name = "image")
+//    private String image;
     @ManyToOne
     @JoinColumn(name = "category_id")
     private Category category;

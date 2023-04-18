@@ -28,7 +28,7 @@ public class ImageService extends AbstractService {
             Files.copy(file.getInputStream(), f.toPath());
             String url = dir.getName() + File.separator + f.getName();
             Product p = getProductById(productId);
-            p.setImage(url);
+            //p.setImage(url);
             //System.out.println(url);
             productRepository.save(p);
             return mapper.map(p, ProductDTO.class);
