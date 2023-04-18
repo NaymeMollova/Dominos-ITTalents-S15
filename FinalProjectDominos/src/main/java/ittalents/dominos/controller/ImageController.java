@@ -3,6 +3,7 @@ package ittalents.dominos.controller;
 import ittalents.dominos.model.DTOs.ProductDTO;
 import ittalents.dominos.model.entities.Product;
 import ittalents.dominos.service.ImageService;
+import ittalents.dominos.service.ProductService;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.SneakyThrows;
@@ -19,11 +20,14 @@ public class ImageController extends AbstractController {
 
     @Autowired
     private ImageService imageService;
+    @Autowired
+    private ProductService productService;
 
     @SneakyThrows
-    @PostMapping("dominos/image")
-    public ProductDTO upload(@RequestParam("file") MultipartFile file, HttpSession s){
-        return imageService.upload(file, getLoggedId(s));
+    @PostMapping("dominos/products/{id}/image")
+    public ProductDTO uploadImageProduct(@PathVariable int id, @RequestParam("file") MultipartFile file, HttpSession s){
+        isAdminLoggedIn(s);
+        return imageService.uploadImageProduct(id, file);
     }
 
     @SneakyThrows
