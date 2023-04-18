@@ -16,11 +16,11 @@ import java.util.UUID;
 public class ImageService extends AbstractService {
 
 
-    public ProductDTO upload(MultipartFile file, int productId){
+    public ProductDTO uploadImageProduct(int productId, MultipartFile file){
         try{
             String ext = FilenameUtils.getExtension(file.getOriginalFilename());
             String name = UUID.randomUUID().toString() + "."+ext;
-            File dir = new File("uploads");
+            File dir = new File("uploadsProducts");
             if(!dir.exists()){
                 dir.mkdirs();
             }
@@ -28,7 +28,7 @@ public class ImageService extends AbstractService {
             Files.copy(file.getInputStream(), f.toPath());
             String url = dir.getName() + File.separator + f.getName();
             Product p = getProductById(productId);
-            //p.setImage(url);
+            p.setImage(url);
             //System.out.println(url);
             productRepository.save(p);
             return mapper.map(p, ProductDTO.class);
@@ -38,7 +38,7 @@ public class ImageService extends AbstractService {
         }
     }
     public File download(String fileName) {
-        File dir = new File("uploads");
+        File dir = new File("uploadsProducts");
         File f = new File(dir, fileName);
         if(f.exists()){
             return f;
