@@ -1,7 +1,6 @@
 package ittalents.dominos.service;
 
 import ittalents.dominos.model.entities.Category;
-import ittalents.dominos.model.entities.Ingredient;
 import ittalents.dominos.model.entities.Product;
 import ittalents.dominos.model.entities.User;
 import ittalents.dominos.model.exceptions.NotFoundException;
@@ -36,6 +35,9 @@ public abstract class AbstractService {
         return categoryRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("Category not found")
         );
+    }
+    public User findLoggedUser(int userId) {
+        return userRepository.getReferenceById(userId);
     }
 
 

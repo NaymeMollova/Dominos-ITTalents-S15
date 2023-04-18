@@ -16,7 +16,7 @@ public class OrderInfoDTO {
     private int id;
     private BigDecimal price;
     private LocalDateTime orderedAt;
-    private AddressWithoutUserDTO address;
+    private AddressInfoDTO address;
     private OrderStatus status;
     private Set<OrderedPizzaWithQuantityDTO> pizzas;
     private Set<OrderedProductWithQuantityDTO> products;

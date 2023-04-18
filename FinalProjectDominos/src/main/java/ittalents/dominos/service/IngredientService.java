@@ -1,13 +1,10 @@
 package ittalents.dominos.service;
 
 import ittalents.dominos.model.DTOs.IngredientDTO;
-import ittalents.dominos.model.DTOs.OrderInfoDTO;
-import ittalents.dominos.model.DTOs.UserWithoutPassDTO;
 import ittalents.dominos.model.entities.Ingredient;
-import ittalents.dominos.model.entities.User;
+import ittalents.dominos.model.exceptions.BadRequestException;
 import ittalents.dominos.model.exceptions.NotFoundException;
 import jakarta.transaction.Transactional;
-import org.springframework.data.relational.core.sql.In;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,13 +15,31 @@ import java.util.stream.Collectors;
 @Transactional
 public class IngredientService extends AbstractService {
 
-    public Ingredient editIngredient(Ingredient old, IngredientDTO newIngredient){
-        old.setName(newIngredient.getName());
-        old.setPrice(newIngredient.getPrice());
+    public Ingredient editIngredient(Integer id, String name, Double price) {
+        // Finding the ingredient to be edited by its ID
+        Optional<Ingredient> ingredientOptional = ingredientRepository.findById(id);
+        
+        if (ingredientOptional.isPresent()) {
+            // Retrieving the ingredient from the Optional
+            Ingredient ingredient = ingredientOptional.get();
 
-        return old;
+            // Checking if an ingredient with the new name already exists
+            Optional<Ingredient> existingIngredientOptional = ingredientRepository.findByName(name);
+            if (existingIngredientOptional.isPresent() && existingIngredientOptional.get().getId()!=(ingredient.getId())) {
+                throw new BadRequestException("Ingredient with name " + name + " already exists.");
+            }
+
+            // Updating the name and price of the ingredient
+            ingredient.setName(name);
+            ingredient.setPrice(price);
+
+            // Saving and returning the edited ingredient
+            return ingredientRepository.save(ingredient);
+        }
+
+        // Throwing an exception if the ingredient with the specified ID is not found
+        throw new NotFoundException("Ingredient with id " + id + " does not exist.");
     }
-
     public IngredientDTO addIngredient(IngredientDTO ingredientDTO, int loggedId){
         Ingredient ingredient = mapper.map(ingredientDTO, Ingredient.class);
         ingredientRepository.save(ingredient);
@@ -52,6 +67,7 @@ public class IngredientService extends AbstractService {
                 .collect(Collectors.toList());
     }
 
+
     public Ingredient findById(int id) {
         Optional<Ingredient> c = ingredientRepository.findById(id);
         if (c.isPresent()) {
@@ -60,4 +76,6 @@ public class IngredientService extends AbstractService {
             throw new NotFoundException("Ingredient not found");
         }
     }
+
+
 }
