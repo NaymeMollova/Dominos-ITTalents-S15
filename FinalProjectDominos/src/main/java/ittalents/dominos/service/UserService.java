@@ -6,7 +6,6 @@ import ittalents.dominos.model.DTOs.UserRegisterDTO;
 import ittalents.dominos.model.DTOs.UserWithoutPassDTO;
 import ittalents.dominos.model.entities.User;
 import ittalents.dominos.model.exceptions.BadRequestException;
-import ittalents.dominos.model.exceptions.NotFoundException;
 import ittalents.dominos.model.exceptions.UnauthorizedException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +35,11 @@ public class UserService extends AbstractService {
 
         User u = mapper.map(register, User.class);
         u.setPassword(encoder.encode(u.getPassword()));
+
         u.setAdmin(false);
+
+        //u.setAdmin(true);
+
         userRepository.save(u);
         return mapper.map(u, UserWithoutPassDTO.class);
     }
@@ -52,41 +55,42 @@ public class UserService extends AbstractService {
     }
     public UserWithoutPassDTO edit(int id, UserEditDTO dto){
         //проверка за съществуване на user
-        Optional<User> u = userRepository.findById(id);
-            if(u.isPresent()){
-                User user = u.get();
+        User user = getUserById(id);
+        //Optional<User> u = userRepository.findById(id);
+//            if(u.isPresent()){
+//                User user = u.get();
                 user.setFirstName(dto.getFirstName());
                 user.setLastName(dto.getLastName());
                 user.setPhoneNumber(dto.getPhoneNumber());
                 user.setEmail(dto.getEmail());
-
-
                 userRepository.save(user);
                 return mapper.map(user, UserWithoutPassDTO.class);
-            }else {
-                //не съществува потребител
-                throw new NotFoundException("No such user exists");
-            }
+//            }else {
+//                //не съществува потребител
+//                throw new NotFoundException("No such user exists");
+//            }
         }
 
         public UserWithoutPassDTO viewProfile(int id) {
-            Optional<User> u = userRepository.findById(id);
-            if(u.isPresent()){
-                User user = u.get();
+            //Optional<User> u = userRepository.findById(id);
+            User user = getUserById(id);
+//            if(u.isPresent()){
+//                User user = u.get();
                 return mapper.map(user, UserWithoutPassDTO.class);
-            }else{
-                //не съществува
-                throw new NotFoundException("No such user exists");
-            }
+//            }else{
+//                //не съществува
+//                throw new NotFoundException("No such user exists");
+//            }
         }
         public UserWithoutPassDTO changePassword(int id) {
-            Optional<User> u = userRepository.findById(id);
-            if (u.isPresent()) {
-                User user = u.get();
+            //Optional<User> u = userRepository.findById(id);
+            User user = getUserById(id);
+//            if (u.isPresent()) {
+//                User user = u.get();
                 return mapper.map(user, UserWithoutPassDTO.class);
-            }else{
-                throw new NotFoundException("No such user exists");
-            }
+//            }else{
+//                throw new NotFoundException("No such user exists");
+//            }
         }
     public List<UserWithoutPassDTO> getAll() {
         return userRepository.findAll()
