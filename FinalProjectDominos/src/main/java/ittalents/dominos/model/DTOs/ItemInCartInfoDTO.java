@@ -18,7 +18,8 @@ public class ItemInCartInfoDTO {
     public ItemInCartInfoDTO(String name, double price, Integer value,
                              DoughType doughType, PizzaSize pizzaSize, boolean isPizza ) {
 
-        this.price=price;
+
+        this.price= Math.round(price * 100.0) / 100.0;
         this.quantity=value;
         if(isPizza){
         this.name = String.format("%s Pizza %s from %s dough", pizzaSize.getName(), name,doughType.getName());

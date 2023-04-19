@@ -18,7 +18,7 @@ public class CategoryController extends AbstractController {
 
     //ADD CATEGORY
     @PostMapping("/dominos/categories")
-    public Category addCategory(@RequestBody Category categoryName, HttpSession session) {
+    public CategoryWithoutIdDTO addCategory(@RequestBody Category categoryName, HttpSession session) {
         isAdminLoggedIn(session);
         return categoryService.saveCategory(categoryName);
     }

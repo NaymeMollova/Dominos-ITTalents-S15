@@ -13,23 +13,25 @@ import java.util.Map;
 @NoArgsConstructor
 public class OrderInfoDTO {
 
+    private String msg;
     private double price;
     private LocalDateTime orderedAt;
-    private OrderStatus status;
-    private Map<ItemInCartDTO, Integer> cart;
-    private String msg;
-    private String addressName;
+   // private OrderStatus status;
+    // private Map<ItemInCartDTO, Integer> cart;
+
+  //  private String addressName;
 
 
 
     public OrderInfoDTO(double price, LocalDateTime orderingTime,
                         OrderStatus orderStatusId, Map<ItemInCartDTO, Integer> cart, String msg, String address) {
+        this.msg = msg;
         this.price=price;
         this.orderedAt =orderingTime;
-        this.addressName=address;
-        this.status=orderStatusId;
-        this.cart=cart;
-        this.msg = msg;
+       // this.addressName=address;
+     //   this.status=orderStatusId;
+      //  this.cart=cart;
+
     }
 
 

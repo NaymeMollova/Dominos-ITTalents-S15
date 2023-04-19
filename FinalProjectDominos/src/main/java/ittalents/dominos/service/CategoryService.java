@@ -19,12 +19,13 @@ public class CategoryService extends AbstractService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    public Category saveCategory(Category categoryName) {
+    public CategoryWithoutIdDTO saveCategory(Category categoryName) {
         Optional<Category> existingCategory = categoryRepository.findByCategoryName(categoryName.getCategoryName());
         if (existingCategory.isPresent()) {
             throw new BadRequestException("Category already exists");
         }
-        return categoryRepository.save(categoryName);
+        Category с = categoryRepository.save(categoryName);
+        return new CategoryWithoutIdDTO(с.getCategoryName());
     }
 
     public CategoryWithoutIdDTO findById(int id) {
