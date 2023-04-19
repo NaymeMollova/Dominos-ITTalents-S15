@@ -1,8 +1,14 @@
 package ittalents.dominos.controller;
 
+import ittalents.dominos.model.DTOs.AddressInfoDTO;
+import ittalents.dominos.model.entities.Address;
 import ittalents.dominos.service.AddressService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class AddressController extends AbstractController {
@@ -10,60 +16,37 @@ public class AddressController extends AbstractController {
     private AddressService addressService;
 
     //ADD ADDRESS
-//    @PostMapping("/dominos/addresses")
-//    public AddressInfoDTO addAddress(HttpSession session, @RequestBody AddressInfoDTO newAddress) {
-//        //if user loggedIn
-//        try {
-//            isAddressValid(newAddress.getAddress());
-//        }
-//
-//        //if it doesn`t exist yet
-//        //save it
-//    }
+    @PostMapping("/dominos/addresses")
+    public AddressInfoDTO addAddress(HttpSession session, @RequestBody AddressInfoDTO address) {
+        isUserLoggedIn(session);
+        return addressService.saveAddress(getLoggedId(session), address.getAddress());
+    }
 
+    //DELETE ADDRESS
+    @DeleteMapping("/dominos/addresses/{id}")
+    public AddressInfoDTO deleteAddress(HttpSession session, @PathVariable int id) {
+        isUserLoggedIn(session);
+        return addressService.deleteAddress(getLoggedId(session), id);
+    }
+    //VIEW ADDRESSES
+    @GetMapping("/dominos/addresses")
+    public List<AddressInfoDTO> getAllAddressesOfLoggedUser(HttpSession session) {
+        isUserLoggedIn(session);
+        List<Address> addresses = addressService.getAllAddressesByOwner(getLoggedId(session));
+        return addresses.stream()
+                .map(address -> new AddressInfoDTO(address.getAddressName()))
+                .collect(Collectors.toList());
+    }
 
     //EDIT ADDRESS
-    //  @DeleteMapping("/dominos/addresses")
+    @PutMapping("/dominos/addresses/{id}")
+    public AddressInfoDTO editAddress(HttpSession session, @PathVariable int id, @RequestBody AddressInfoDTO newAddress){
+        isUserLoggedIn(session);
+        return addressService.editAddress(newAddress.getAddress(), getLoggedId(session), id);
 
-    //VIEW ADDRESSES
-    //  @GetMapping("/dominos/addresses")
-
-
-    //EDIT ADDRESSES
-    //  @PutMapping("/dominos/addresses/{id}")
-
-
-    private IllegalArgumentException isAddressValid(String address) {
-        // Check that the address string is not empty
-        if (address == null || address.trim().isEmpty()) {
-            throw new IllegalArgumentException("Address cannot be empty");
-        }
-
-        // Check that the address does not contain special characters such as @, #, $, etc.
-        if (!address.matches("^[a-zA-Z0-9\\s\\-.,\\/]{1,255}$")) {
-            throw new IllegalArgumentException("Address contains invalid characters");
-        }
-
-        // Check that the address does not contain HTML tags or other formatting
-        if (address.matches(".*<(\"[^\"]*\"|'[^']*'|[^'\">])*>.*")) {
-            throw new IllegalArgumentException("Address contains HTML tags or other formatting");
-        }
-
-        // Check that the address starts with a letter or number and does not end with a space
-        if (!address.matches("^[a-zA-Z0-9].*[a-zA-Z0-9\\s\\-.,\\/]$")) {
-            throw new IllegalArgumentException("Address starts with invalid characters or ends with a space");
-        }
-
-        // Check that the address contains at least one word or number separated from other characters by spaces or punctuation marks
-        if (!address.matches(".*[a-zA-Z0-9]+.*")) {
-            throw new IllegalArgumentException("Address must contain at least one word or number");
-        }
-
-        // Check that the address is not too short or too long, usually limited to 255 characters
-        if (address.length() > 255) {
-            throw new IllegalArgumentException("Address is too long");
-        }
-        return null;
     }
+
+
+
 
 }
