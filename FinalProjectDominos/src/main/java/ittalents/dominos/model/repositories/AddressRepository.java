@@ -12,10 +12,14 @@ import java.util.Optional;
 @Repository
 public interface AddressRepository extends JpaRepository<Address, Integer> {
 
+
     List<Address> findAllByOwner(User loggedUser);
 
     Optional<Address> findByAddressName(String address);
 
     Optional<User> findOwnerById(@Param("addressId") int addressId);
+
+
+
 
 }

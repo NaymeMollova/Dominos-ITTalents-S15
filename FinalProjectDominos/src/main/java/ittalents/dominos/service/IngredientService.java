@@ -3,7 +3,6 @@ package ittalents.dominos.service;
 import ittalents.dominos.model.DTOs.IngredientDTO;
 import ittalents.dominos.model.entities.Ingredient;
 import ittalents.dominos.model.exceptions.BadRequestException;
-import ittalents.dominos.model.exceptions.NotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -17,11 +16,12 @@ public class IngredientService extends AbstractService {
 
     public Ingredient editIngredient(Integer id, String name, Double price) {
         // Finding the ingredient to be edited by its ID
-        Optional<Ingredient> ingredientOptional = ingredientRepository.findById(id);
-        
-        if (ingredientOptional.isPresent()) {
-            // Retrieving the ingredient from the Optional
-            Ingredient ingredient = ingredientOptional.get();
+       // Optional<Ingredient> ingredientOptional = ingredientRepository.findById(id);
+        Ingredient ingredient = getIngredientById(id);
+
+//        if (ingredientOptional.isPresent()) {
+//            // Retrieving the ingredient from the Optional
+//            Ingredient ingredient = ingredientOptional.get();
 
             // Checking if an ingredient with the new name already exists
             Optional<Ingredient> existingIngredientOptional = ingredientRepository.findByName(name);
@@ -38,26 +38,29 @@ public class IngredientService extends AbstractService {
         }
 
         // Throwing an exception if the ingredient with the specified ID is not found
-        throw new NotFoundException("Ingredient with id " + id + " does not exist.");
-    }
+        //throw new NotFoundException("Ingredient with id " + id + " does not exist.");
+
+
     public IngredientDTO addIngredient(IngredientDTO ingredientDTO, int loggedId){
         Ingredient ingredient = mapper.map(ingredientDTO, Ingredient.class);
         ingredientRepository.save(ingredient);
         return mapper.map(ingredient, IngredientDTO.class);
     }
     public void deleteIngredient(int id){
+        Ingredient ingredient = getIngredientById(id);
         ingredientRepository.deleteById(id);
     }
 
     public IngredientDTO viewIngredient(int id){
-        Optional<Ingredient> i = ingredientRepository.findById(id);
-        if(i.isPresent()){
-            Ingredient ingredient = i.get();
+        Ingredient ingredient = getIngredientById(id);
+//        Optional<Ingredient> i = ingredientRepository.findById(id);
+//        if(i.isPresent()){
+//            Ingredient ingredient = i.get();
             return mapper.map(ingredient, IngredientDTO.class);
-        }else{
-            //не съществува
-            throw new NotFoundException("No such ingredient exists");
-        }
+//        }else{
+//            //не съществува
+//            throw new NotFoundException("No such ingredient exists");
+//        }
     }
 
     public List<IngredientDTO> getAll() {
@@ -68,14 +71,14 @@ public class IngredientService extends AbstractService {
     }
 
 
-    public Ingredient findById(int id) {
-        Optional<Ingredient> c = ingredientRepository.findById(id);
-        if (c.isPresent()) {
-            return mapper.map(c.get(), Ingredient.class);
-        } else {
-            throw new NotFoundException("Ingredient not found");
-        }
-    }
+//    public Ingredient viewIngredient(int id) {
+//        Optional<Ingredient> c = ingredientRepository.findById(id);
+//        if (c.isPresent()) {
+//            return mapper.map(c.get(), Ingredient.class);
+//        } else {
+//            throw new NotFoundException("Ingredient not found");
+//        }
+//    }
 
 
 }

@@ -21,7 +21,6 @@ public class Order {
     @Column
     private double price;
 
-
     @Column(name = "time_and_date")
     private LocalDateTime orderingTime;
 

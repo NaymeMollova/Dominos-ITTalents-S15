@@ -36,14 +36,14 @@ public class IngredientController extends AbstractController {
     //DELETE INGREDIENT
     @DeleteMapping("dominos/ingredients/{id}")
     public void deleteIngredient(@PathVariable("id") int id, HttpSession s) {
-        if (isAdminLoggedIn(s)) {
-            Ingredient ingredient = ingredientService.findById(id);
-            if (ingredient != null) {
+        isAdminLoggedIn(s);
+//            Ingredient ingredient = ingredientService.findById(id);
+//            if (ingredient != null) {
                 ingredientService.deleteIngredient(id);
-            }
-        } else {
-            throw new NotFoundException("not found");
-        }
+//            }
+//        } else {
+//            throw new NotFoundException("not found");
+//        }
     }
 
     //DELETE INGREDIENT
