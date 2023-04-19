@@ -14,6 +14,8 @@ import java.util.Optional;
 @Service
 public class CartService extends AbstractService {
 
+
+
     public ItemInCartDTO addProduct(Map<ItemInCartDTO, Integer> cart, ProductWithQuantityDTO addedProductDTO) {
         if (productRepository.findById(addedProductDTO.getId()).isEmpty()) {
             throw new BadRequestException("No product with id " + addedProductDTO.getId() + " found");

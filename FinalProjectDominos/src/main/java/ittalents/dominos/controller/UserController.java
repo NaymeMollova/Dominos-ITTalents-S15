@@ -56,7 +56,7 @@ public class UserController extends AbstractController {
         }
     }
     @PutMapping("/dominos/users/profile")
-    public UserWithoutPassDTO edit(@RequestBody UserEditDTO dto, HttpSession s) {
+    public UserWithoutPassDTO edit(@Valid @RequestBody UserEditDTO dto, HttpSession s) {
         if (s != null && s.getAttribute("LOGGED") != null && !s.isNew()) {
             int userId = (int) s.getAttribute("LOGGED_ID");
             UserWithoutPassDTO userWithoutPassDTO = userService.edit(userId, dto);
@@ -67,6 +67,7 @@ public class UserController extends AbstractController {
     }
     @GetMapping("dominos/users/profile")
     public UserWithoutPassDTO view(HttpSession s){
+        isAdminLoggedIn(s);
         if(s != null && s.getAttribute("LOGGED") != null && !s.isNew()){
             int userId = (int) s.getAttribute("LOGGED_ID");
             UserWithoutPassDTO userWithoutPassDTO = userService.viewProfile(userId);

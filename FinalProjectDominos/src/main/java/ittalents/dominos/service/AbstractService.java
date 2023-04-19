@@ -1,8 +1,6 @@
 package ittalents.dominos.service;
 
-import ittalents.dominos.model.entities.Category;
-import ittalents.dominos.model.entities.Product;
-import ittalents.dominos.model.entities.User;
+import ittalents.dominos.model.entities.*;
 import ittalents.dominos.model.exceptions.NotFoundException;
 import ittalents.dominos.model.repositories.*;
 import org.modelmapper.ModelMapper;
@@ -31,6 +29,7 @@ public abstract class AbstractService {
     @Autowired
     protected AddressRepository addressRepository;
 
+
     protected User getUserById(int id){
         return userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
     }
@@ -42,6 +41,16 @@ public abstract class AbstractService {
     public Category getCategoryById(int id){
         return categoryRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("Category not found")
+        );
+    }
+    public Pizza getPizzaById(int id){
+        return pizzaRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Pizza not found")
+        );
+    }
+    public Ingredient getIngredientById(int id){
+        return ingredientRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Ingredient not found")
         );
     }
     public User findLoggedUser(int userId) {

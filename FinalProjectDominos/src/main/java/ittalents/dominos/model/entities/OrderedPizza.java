@@ -18,8 +18,12 @@ public class OrderedPizza {
     //не знам, има ли нужда от колона price при положение че е сума от
     // this.pizza.price+this.dough.type.price+this.pizza.size.price
 
+
     @Column(name = "price")
     private BigDecimal price;
+
+    //@Column(name = "price")
+    //private double price;
 
     @ManyToOne
     @JoinColumn(name = "orders")

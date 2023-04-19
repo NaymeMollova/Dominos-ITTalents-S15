@@ -29,6 +29,8 @@ public class AddressService extends AbstractService {
         checkIfAddressNameExistsInProfile(addressName, loggedId);
         Address a = new Address();
         a.setAddressName(addressName);
+
+        ((Address) a).setAddressName(addressName);
         a.setOwner(findLoggedUser(loggedId));
         addressRepository.save(a);
         return new AddressInfoDTO(a.getAddressName());
@@ -51,13 +53,19 @@ public class AddressService extends AbstractService {
         }
 
         // Check that the address contains at least one word or number separated from other characters by spaces or punctuation marks
-        if (!address.matches(".*[a-zA-Z0-9]+.*")) {
-            throw new BadRequestException("Address must contain at least one word or number");
-        }
 
-        // Check that the address is not too long, usually limited to 255 characters
-        if (address.length() > 255) {
-            throw new BadRequestException("Address is too long");
+        if (!address.matches(".*[a-zA-Z0-9]+.*")) {
+
+            if (!address.matches(".[a-zA-Z0-9]+.")) {
+
+                throw new BadRequestException("Address must contain at least one word or number");
+            }
+
+            // Check that the address is not too long, usually limited to 255 characters
+            if (address.length() > 255) {
+                throw new BadRequestException("Address is too long");
+            }
+
         }
         return null;
     }
@@ -72,7 +80,6 @@ public class AddressService extends AbstractService {
     }
 
     public List<Address> getAllAddressesByOwner(int id) {
-
         return addressRepository.findAllByOwner(findLoggedUser(id));
     }
 
@@ -108,4 +115,9 @@ public class AddressService extends AbstractService {
         Address updatedAddress = addressRepository.save(address);
         return new AddressInfoDTO(updatedAddress.getAddressName());
     }
+
 }
+
+
+
+
