@@ -6,14 +6,11 @@ import ittalents.dominos.model.DTOs.ProductEditDTO;
 import ittalents.dominos.model.DTOs.ProductWithoutImageDTO;
 import ittalents.dominos.model.entities.Category;
 import ittalents.dominos.model.entities.Product;
-import ittalents.dominos.model.exceptions.BadRequestException;
 import ittalents.dominos.model.exceptions.NotFoundException;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -56,8 +53,4 @@ public class ProductService extends AbstractService {
                 .map(product -> mapper.map(product, ProductDTO.class))
                 .collect(Collectors.toList());
     }
-
-
-
-
 }

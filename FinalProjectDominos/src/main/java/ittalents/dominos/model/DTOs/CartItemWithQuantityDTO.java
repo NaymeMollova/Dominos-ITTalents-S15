@@ -1,5 +1,5 @@
 package ittalents.dominos.model.DTOs;
-import ittalents.dominos.model.entities.Product;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -7,8 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-
-public class OrderedProductWithQuantityDTO {
-    private Product product;
+public class CartItemWithQuantityDTO {
+    private String productName;
     private int quantity;
 }

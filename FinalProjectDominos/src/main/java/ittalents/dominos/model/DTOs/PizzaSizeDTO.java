@@ -4,4 +4,7 @@ public class PizzaSizeDTO {
 
     private String name;
     private String size;
+
+    public static class ProductWithQuantityDTO {
+    }
 }

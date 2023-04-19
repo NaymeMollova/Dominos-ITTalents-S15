@@ -74,11 +74,9 @@ public class CartService extends AbstractService {
                 price, true, pizzaSize,  doughType);
 
         if (alreadyAddedSamePizza.isEmpty()) {
-            System.out.println("Мы добавим новый продукт");
             cart.put(pizzaToAdd, addedPizzaDTO.getQuantity());
 
         } else {
-            System.out.println("Мы будем увеличивать количество");
             int quantityOfAlreadyAddedSamePizza = cart.get(alreadyAddedSamePizza.get().getKey());
             int newQuantity = (quantityOfAlreadyAddedSamePizza + addedPizzaDTO.getQuantity());
             cart.put(alreadyAddedSamePizza.get().getKey(), newQuantity);

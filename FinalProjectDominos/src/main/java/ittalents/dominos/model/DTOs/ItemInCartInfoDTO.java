@@ -12,7 +12,7 @@ public class ItemInCartInfoDTO {
     private String name;
     private double price;
     private int quantity;
-    private int id;
+    // private int id;
    // private static int idCount=0;
 
     public ItemInCartInfoDTO(String name, double price, Integer value,

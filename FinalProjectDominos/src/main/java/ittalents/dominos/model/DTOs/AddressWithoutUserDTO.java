@@ -8,7 +8,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class AddressWithoutUserDTO {
-
     private int id;
     private String address;
 }

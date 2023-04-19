@@ -15,6 +15,7 @@ import java.util.Optional;
 @Service
 @Transactional
 public class CategoryService extends AbstractService {
+
     @Autowired
     private CategoryRepository categoryRepository;
 
@@ -26,10 +27,10 @@ public class CategoryService extends AbstractService {
         return categoryRepository.save(categoryName);
     }
 
-    public Category findById(int id) {
+    public CategoryWithoutIdDTO findById(int id) {
         Optional<Category> c = categoryRepository.findById(id);
         if (c.isPresent()) {
-            return mapper.map(c.get(), Category.class);
+            return new CategoryWithoutIdDTO(c.get().getCategoryName());
         } else {
             throw new NotFoundException("Category not found");
         }
@@ -62,10 +63,10 @@ public class CategoryService extends AbstractService {
     }
 
 
-    public Category deleteCategory(int id) {
-        Category category = findById(id);
+    public CategoryWithoutIdDTO deleteCategory(int id) {
+        CategoryWithoutIdDTO categoryDTO = findById(id);
         categoryRepository.deleteById(id);
-        return category;
+        return categoryDTO;
     }
 }
 

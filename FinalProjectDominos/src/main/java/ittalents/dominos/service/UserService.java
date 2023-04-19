@@ -10,7 +10,6 @@ import ittalents.dominos.model.exceptions.NotFoundException;
 import ittalents.dominos.model.exceptions.UnauthorizedException;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -37,7 +36,7 @@ public class UserService extends AbstractService {
 
         User u = mapper.map(register, User.class);
         u.setPassword(encoder.encode(u.getPassword()));
-        u.setAdmin(true);
+        u.setAdmin(false);
         userRepository.save(u);
         return mapper.map(u, UserWithoutPassDTO.class);
     }

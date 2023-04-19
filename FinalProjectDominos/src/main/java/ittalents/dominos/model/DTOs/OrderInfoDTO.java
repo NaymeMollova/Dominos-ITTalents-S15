@@ -5,19 +5,33 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.Map;
 
 @Getter
 @Setter
 @NoArgsConstructor
 public class OrderInfoDTO {
-    private int id;
-    private BigDecimal price;
+
+    private double price;
     private LocalDateTime orderedAt;
-    private AddressInfoDTO address;
     private OrderStatus status;
-    private Set<OrderedPizzaWithQuantityDTO> pizzas;
-    private Set<OrderedProductWithQuantityDTO> products;
+    private Map<ItemInCartDTO, Integer> cart;
+    private String msg;
+    private String addressName;
+
+
+
+    public OrderInfoDTO(double price, LocalDateTime orderingTime,
+                        OrderStatus orderStatusId, Map<ItemInCartDTO, Integer> cart, String msg, String address) {
+        this.price=price;
+        this.orderedAt =orderingTime;
+        this.addressName=address;
+        this.status=orderStatusId;
+        this.cart=cart;
+        this.msg = msg;
+    }
+
+
+
 }

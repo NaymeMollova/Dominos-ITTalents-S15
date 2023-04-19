@@ -9,8 +9,8 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ProductWithoutImageDTO {
 
-    //private int id;
+    private int id;
     private String name;
     private double price;
-   // private int categoryId;
+   private int categoryId;
 }

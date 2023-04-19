@@ -18,4 +18,6 @@ public class Address {
     @JoinColumn(name = "user_id")
     private User owner;
 
+
+
 }

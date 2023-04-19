@@ -18,7 +18,7 @@ public class OrderedPizza {
     //не знам, има ли нужда от колона price при положение че е сума от
     // this.pizza.price+this.dough.type.price+this.pizza.size.price
 
-    //@Column(name = "price")
+    @Column(name = "price")
     private BigDecimal price;
 
     @ManyToOne
@@ -27,9 +27,9 @@ public class OrderedPizza {
 
     @ManyToOne
     @JoinColumn(name = "pizzas")
-    private Pizza pizzaName;
+    private Pizza pizza;
     @ManyToOne
-    @JoinColumn(name = "dough_type")
+    @JoinColumn(name = "dough_types")
     private DoughType doughType;
 
     @ManyToOne

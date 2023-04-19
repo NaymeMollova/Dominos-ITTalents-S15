@@ -1,12 +1,12 @@
 package ittalents.dominos.model.entities;
+
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import java.math.BigDecimal;
 
 @Setter
 @Getter
-@Entity(name = "dough_type")
+@Entity(name = "dough_types")
 public class DoughType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,7 +16,7 @@ public class DoughType {
     private String name;
 
     @Column(name = "price")
-    private BigDecimal price;
+    private double price;
 
 
 }

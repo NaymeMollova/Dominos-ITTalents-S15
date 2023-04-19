@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Setter
 @Getter
 @Entity(name = "users")
@@ -24,4 +26,10 @@ public class User {
     private String email;
     @Column(name = "is_admin")
     private boolean isAdmin;
+
+    @OneToMany(mappedBy = "owner")
+    private List<Address> addressNames;
+
+
+
 }

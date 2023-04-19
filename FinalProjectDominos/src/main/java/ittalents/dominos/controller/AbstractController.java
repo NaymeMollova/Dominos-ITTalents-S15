@@ -1,7 +1,6 @@
 package ittalents.dominos.controller;
 
 import ittalents.dominos.model.DTOs.ErrorDTO;
-import ittalents.dominos.model.entities.User;
 import ittalents.dominos.model.exceptions.BadRequestException;
 import ittalents.dominos.model.exceptions.NotFoundException;
 import ittalents.dominos.model.exceptions.UnauthorizedException;
@@ -19,24 +18,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class AbstractController {
+    public static final String CART = "CART";
     @Autowired
     protected UserService userService;
 
+
+
     @ExceptionHandler(BadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorDTO handleBadRequest(Exception e){
+    public ErrorDTO handleBadRequest(Exception e) {
         return generateErrorDTO(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UnauthorizedException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ErrorDTO handleUnauthorized(Exception e){
+    public ErrorDTO handleUnauthorized(Exception e) {
         return generateErrorDTO(e.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorDTO handleNotFound(Exception e){
+    public ErrorDTO handleNotFound(Exception e) {
         return generateErrorDTO(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
@@ -67,9 +69,7 @@ public abstract class AbstractController {
     }
 
     protected boolean isAdminLoggedIn(HttpSession session) {
-        if (!isUserLoggedIn(session)) {
-            throw new UnauthorizedException("You have to log in first");
-        }
+        isUserLoggedIn(session);
         int userId = (int) session.getAttribute("LOGGED_ID");
         if (!userService.findLoggedUser(userId).isAdmin()) {
             return false;
@@ -79,11 +79,11 @@ public abstract class AbstractController {
 
     protected boolean isUserLoggedIn(HttpSession session) {
         if (!isThereLoggedInUser(session)) {
-            return false;
+            throw new UnauthorizedException("You have to log in first");
         }
         int userId = (int) session.getAttribute("LOGGED_ID");
         if (userService.findLoggedUser(userId) == null) {
-            return false;
+            throw new UnauthorizedException("You have to log in first");
         }
         return true;
     }
@@ -94,12 +94,24 @@ public abstract class AbstractController {
         }
         return true;
     }
-    protected int getLoggedId(HttpSession s){
-        if(s.getAttribute("LOGGED_ID") == null){
+
+    protected int getLoggedId(HttpSession s) {
+        if (s.getAttribute("LOGGED_ID") == null) {
             throw new UnauthorizedException("You have to login first");
         }
         return (int) s.getAttribute("LOGGED_ID");
     }
+//    protected Map<ItemInCartDTO, Integer> getCart(HttpSession session){
+//        Map<ItemInCartDTO, Integer> cart;
+//        if(session.getAttribute(CART) == null){
+//            cart = new LinkedHashMap<>();
+//        }
+//        else {
+//            cart = (Map<ItemInCartDTO, Integer>) session.getAttribute(CART);
+//        }
+//        session.setAttribute(CART,cart);
+//        return cart;
+//    }
 
 }
 
