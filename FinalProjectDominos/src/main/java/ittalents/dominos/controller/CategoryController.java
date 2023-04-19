@@ -25,7 +25,7 @@ public class CategoryController extends AbstractController {
 
     // DELETE CATEGORY
     @DeleteMapping("/dominos/categories/{id}")
-    public Category deleteCategory(@PathVariable("id") int id, HttpSession session) {
+    public CategoryWithoutIdDTO deleteCategory(@PathVariable("id") int id, HttpSession session) {
         isAdminLoggedIn(session);
         return categoryService.deleteCategory(id);
     }
@@ -40,7 +40,7 @@ public class CategoryController extends AbstractController {
 
     //VIEW CATEGORY
     @GetMapping("/dominos/categories/{id}")
-    public Category viewCategory(@PathVariable int id) {
+    public CategoryWithoutIdDTO viewCategory(@PathVariable int id) {
         return categoryService.findById(id);
     }
 
