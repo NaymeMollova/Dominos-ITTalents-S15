@@ -50,6 +50,7 @@ public abstract class AbstractController {
     }
 
     private ErrorDTO generateErrorDTO(Object o, HttpStatus s) {
+
         return ErrorDTO.builder()
                 .msg(o)
                 .time(LocalDateTime.now())
@@ -79,7 +80,7 @@ public abstract class AbstractController {
         return true;
     }
 
-    protected boolean isUserLoggedIn(HttpSession session) {
+    protected void isUserLoggedIn(HttpSession session) {
         if (!isThereLoggedInUser(session)) {
             throw new UnauthorizedException("You have to log in first");
         }
@@ -87,7 +88,7 @@ public abstract class AbstractController {
         if (userService.findLoggedUser(userId) == null) {
             throw new UnauthorizedException("You have to log in first");
         }
-        return true;
+
     }
 
     private boolean isThereLoggedInUser(HttpSession session) {

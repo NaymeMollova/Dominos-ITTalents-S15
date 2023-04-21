@@ -9,6 +9,8 @@ import ittalents.dominos.model.exceptions.BadRequestException;
 import ittalents.dominos.model.exceptions.NotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -39,7 +41,7 @@ public class ProductService extends AbstractService {
         return mapper.map(product, ProductDTO.class);
     }
 
-    public ProductEditDTO editProduct(Integer id, String name, Double price) {
+    public ProductEditDTO editProduct(Integer id, String name, BigDecimal price) {
         Product product = getProductById(id);
 
         Optional<Product> existingProduct = productRepository.findByName(name);

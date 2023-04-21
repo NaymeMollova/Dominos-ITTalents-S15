@@ -38,7 +38,7 @@ public class UserService extends AbstractService {
 
         u.setAdmin(false);
 
-        //u.setAdmin(true);
+    //    u.setAdmin(true);
 
         userRepository.save(u);
         return mapper.map(u, UserWithoutPassDTO.class);

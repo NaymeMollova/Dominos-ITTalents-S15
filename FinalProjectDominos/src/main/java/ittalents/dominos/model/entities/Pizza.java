@@ -3,6 +3,8 @@ package ittalents.dominos.model.entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,7 +18,7 @@ public class Pizza {
     @Column(name = "name")
     private String name;
     @Column(name = "price")
-    private double price;
+    private BigDecimal price;
     @Column(name = "image")
     private String image;
 

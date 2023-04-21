@@ -12,10 +12,6 @@ public class OrderStatus {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    public enum Name {
-        NEW, IN_PROGRESS, DELIVERED
-    }
-    @Column
-    @Enumerated(EnumType.STRING)
-    private Name name;
+    @Column(name = "name")
+    private String name;
 }

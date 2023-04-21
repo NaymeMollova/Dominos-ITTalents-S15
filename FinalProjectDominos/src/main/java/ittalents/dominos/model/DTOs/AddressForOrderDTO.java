@@ -9,9 +9,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class PizzaWithQuantityDTO {
-    private int pizzaId;
-    private int quantity;
-    private int doughTypeId;
-    private int pizzaSizeId;
+public class AddressForOrderDTO {
+    private int addressId;
 }
