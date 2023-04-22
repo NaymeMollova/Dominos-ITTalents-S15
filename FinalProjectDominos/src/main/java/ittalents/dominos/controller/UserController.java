@@ -1,15 +1,10 @@
 package ittalents.dominos.controller;
 import ittalents.dominos.model.DTOs.*;
-import ittalents.dominos.model.entities.User;
-import ittalents.dominos.model.exceptions.BadRequestException;
-import ittalents.dominos.model.exceptions.UnauthorizedException;
 import ittalents.dominos.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,20 +14,6 @@ public class UserController extends AbstractController {
 
     @Autowired
     private UserService userService;
-
-//    @Autowired
-//    private JavaMailSender javaMailSender;
-//
-//    @GetMapping("/email")
-//    public void sendMail(){
-//        SimpleMailMessage message = new SimpleMailMessage();
-//        message.setFrom("naymeto25@gmail.com");
-//        message.setTo("naimeto@abv.bg");
-//        message.setText("pisna mi");
-//
-//        javaMailSender.send(message);
-//        System.out.println("done");
-//    }
 
 
     @PostMapping("/dominos/users")
@@ -54,20 +35,20 @@ public class UserController extends AbstractController {
     @Transactional
     public void logout(HttpSession s) {
         getLoggedId(s);
-            s.invalidate();
+        s.invalidate();
     }
     @PutMapping("/dominos/users/profile")
     @Transactional
     public UserWithoutPassDTO edit(@Valid @RequestBody UserEditDTO dto, HttpSession s) {
         int userId = getLoggedId(s);
-            UserWithoutPassDTO userWithoutPassDTO = userService.edit(userId, dto);
-            return userWithoutPassDTO;
+        UserWithoutPassDTO userWithoutPassDTO = userService.edit(userId, dto);
+        return userWithoutPassDTO;
     }
     @GetMapping("dominos/users/profile")
     public UserWithoutPassDTO view(HttpSession s){
         int userId = getLoggedId(s);
         UserWithoutPassDTO user = userService.viewProfile(userId);
-            return user;
+        return user;
     }
 
 
@@ -75,7 +56,6 @@ public class UserController extends AbstractController {
     @Transactional
     public UserWithoutPassDTO changePassword(@Valid @RequestBody UserChangePasswordDTO dto, HttpSession s){
         int userId = getLoggedId(s);
-        System.out.println(userId);
         UserWithoutPassDTO userWithoutPassDTO = userService.changePassword(userId, dto);
         return userWithoutPassDTO;
     }

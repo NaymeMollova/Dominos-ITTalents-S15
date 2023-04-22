@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Setter
 @Getter
 @Entity(name = "products")
@@ -14,7 +16,7 @@ public class Product {
     @Column(name = "name")
     private String name;
     @Column(name = "price")
-    private double price;
+    private BigDecimal price;
     @Column(name = "image")
     private String image;
     @ManyToOne

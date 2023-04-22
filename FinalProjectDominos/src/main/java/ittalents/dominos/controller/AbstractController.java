@@ -50,6 +50,7 @@ public abstract class AbstractController {
     }
 
     private ErrorDTO generateErrorDTO(Object o, HttpStatus s) {
+
         return ErrorDTO.builder()
                 .msg(o)
                 .time(LocalDateTime.now())
@@ -79,42 +80,13 @@ public abstract class AbstractController {
         //return true;
     }
 
-//    protected boolean isUserLoggedIn(HttpSession session) {
-//        if (!isThereLoggedInUser(session)) {
-//            throw new UnauthorizedException("You have to log in first");
-//        }
-//        int userId = getLoggedId(session);
-//        ////////?????????????????????????????????//
-////        if (userService.findLoggedUser(userId) == null) {
-////            throw new UnauthorizedException("You have to log in first");
-////        }
-//        return true;
-//    }
-
-//    protected boolean isThereLoggedInUser(HttpSession session) {
-//        if (session.getAttribute("LOGGED") == null) {
-//            return false;
-//        }
-//        return true;
-//    }
-
     protected int getLoggedId(HttpSession s) {
         if (s.getAttribute("LOGGED_ID") == null) {
             throw new UnauthorizedException("You have to login first");
         }
         return (int) s.getAttribute("LOGGED_ID");
     }
-//    protected Map<ItemInCartDTO, Integer> getCart(HttpSession session){
-//        Map<ItemInCartDTO, Integer> cart;
-//        if(session.getAttribute(CART) == null){
-//            cart = new LinkedHashMap<>();
-//        }
-//        else {
-//            cart = (Map<ItemInCartDTO, Integer>) session.getAttribute(CART);
-//        }
-//        session.setAttribute(CART,cart);
-//        return cart;
-//    }
+
 
 }
 

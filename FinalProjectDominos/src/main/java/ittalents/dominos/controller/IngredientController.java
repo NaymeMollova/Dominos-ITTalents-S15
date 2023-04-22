@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -63,7 +64,7 @@ public class IngredientController extends AbstractController {
 //        }
         // Retrieving the name and price from the DTO
         String name = ingredientDTO.getName();
-        Double price = ingredientDTO.getPrice();
+        BigDecimal price = ingredientDTO.getPrice();
         // Editing the ingredient and retrieving the updated object
         Ingredient updatedIngredient = ingredientService.editIngredient(id, name, price);
         return new IngredientDTO(updatedIngredient.getName(), updatedIngredient.getPrice());

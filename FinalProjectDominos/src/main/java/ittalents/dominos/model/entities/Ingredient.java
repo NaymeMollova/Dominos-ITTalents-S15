@@ -16,7 +16,7 @@ public class Ingredient {
     @Column(name = "name")
     private String name;
     @Column(name = "price")
-    private double price;
+    private BigDecimal price;
     @ManyToMany(mappedBy = "ingredients")
     private Set<Pizza> pizzas = new HashSet<>();
 }

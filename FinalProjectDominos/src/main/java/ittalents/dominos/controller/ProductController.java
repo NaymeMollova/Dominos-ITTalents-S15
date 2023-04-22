@@ -8,6 +8,8 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -36,7 +38,7 @@ public class ProductController extends AbstractController {
     public ProductEditDTO editProduct(@Valid @PathVariable("id") int id,@RequestBody ProductEditDTO dto , HttpSession s){
         isAdminLoggedIn(s);
         String name = dto.getName();
-        double price = dto.getPrice();
+        BigDecimal price = dto.getPrice();
         ProductEditDTO updatedProduct = productService.editProduct(id, name, price);
         return new ProductEditDTO(updatedProduct.getName(), updatedProduct.getPrice());
     }

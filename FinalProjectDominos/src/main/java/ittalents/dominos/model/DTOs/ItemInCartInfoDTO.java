@@ -5,21 +5,24 @@ import ittalents.dominos.model.entities.PizzaSize;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Setter
 @Getter
 
-public class ItemInCartInfoDTO {
+public  class ItemInCartInfoDTO {
     private String name;
-    private double price;
+    private BigDecimal price;
     private int quantity;
+
     // private int id;
    // private static int idCount=0;
 
-    public ItemInCartInfoDTO(String name, double price, Integer value,
+    public ItemInCartInfoDTO(String name, BigDecimal price, Integer value,
                              DoughType doughType, PizzaSize pizzaSize, boolean isPizza ) {
 
 
-        this.price= Math.round(price * 100.0) / 100.0;
+        this.price= price;
         this.quantity=value;
         if(isPizza){
         this.name = String.format("%s Pizza %s from %s dough", pizzaSize.getName(), name,doughType.getName());
@@ -27,4 +30,5 @@ public class ItemInCartInfoDTO {
             this.name=name;
         }
     }
+
 }

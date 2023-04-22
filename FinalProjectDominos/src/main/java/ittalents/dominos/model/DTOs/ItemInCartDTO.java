@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 @Setter
@@ -18,56 +19,62 @@ import java.util.Objects;
 public class ItemInCartDTO {
         private int id;
         private String name;
-        private double price;
+        private BigDecimal price;
         private boolean isPizza;
 
         private Pizza pizza;
         private DoughType doughType;
         private PizzaSize pizzaSize;
+        private String pizzaSizeName;
 
-        public ItemInCartDTO(int id, double price, boolean b) {
-                this.id = id;
-                this.price = price;
+        public ItemInCartDTO(int id, BigDecimal price, boolean b) {
                 this.isPizza=b;
-                if (!this.isPizza){
-//                        this.pizza=null;
-//                        this.doughType=null;
-//                        this.pizzaSize=null;
+                if (this.isPizza){
+                         this.id = id;
+                this.price = price;
                 }
         }
 
-        public ItemInCartDTO(int id, String name, double price, boolean b) {
+        public ItemInCartDTO(int id, String name, BigDecimal price, boolean b) {
                 this.id = id;
                 this.price = price;
                 this.isPizza=b;
                 this.name=name;
         }
 
-        public ItemInCartDTO(int id, double price, boolean b, PizzaSize pizzaSize, DoughType doughType) {
+        public ItemInCartDTO(int id, BigDecimal price, boolean b, PizzaSize pizzaSize, DoughType doughType, Pizza pizza,String pizzaSizeName) {
                 this.id = id;
                 this.price = price;
                 this.isPizza=b;
                 this.doughType=doughType;
                 this.pizzaSize=pizzaSize;
+                this.pizza=pizza;
+                this.pizzaSizeName=pizzaSizeName;
         }
 
-        public ItemInCartDTO(int id, String name, double price, boolean b, PizzaSize pizzaSize, DoughType doughType) {
+
+        public ItemInCartDTO(int id, String name, BigDecimal price, boolean b,
+                             PizzaSize pizzaSize, DoughType doughType, Pizza pizza,String pizzaSizeName) {
                 this.id = id;
                 this.price = price;
                 this.name=name;
                 this.isPizza=b;
                 this.doughType=doughType;
                 this.pizzaSize=pizzaSize;
+                this.pizza=pizza;
+                this.pizzaSizeName=pizzaSizeName;
+
         }
 
         @Override
         public boolean equals(Object o) {
                 ItemInCartDTO that = (ItemInCartDTO) o;
-                if(!isPizza) {
-                        if (o == null || getClass() != o.getClass()) return false;
-                        return Objects.equals(id, that.id);
-                }
+//                if(!isPizza) {
+//                        if (o == null || getClass() != o.getClass()) return false;
+//                        return Objects.equals(id, that.id);
+//                }
                 return  Objects.equals(id, that.id) &&
+                        Objects.equals(isPizza, that.isPizza)&&
                         Objects.equals(pizzaSize.getId(), that.pizzaSize.getId()) &&
                         Objects.equals(doughType.getId(), that.doughType.getId());
         }
@@ -79,5 +86,15 @@ public class ItemInCartDTO {
                 }
                         return Objects.hash(id, doughType.getId(),pizzaSize.getId());
 
+        }
+
+        @Override
+        public String toString() {
+                if(!isPizza){
+                        return name;
+                }
+                else{
+                        return String.format("%s pizza %s from %s dough", this.pizzaSize.getName(),this.name,this.doughType);
+                }
         }
 }

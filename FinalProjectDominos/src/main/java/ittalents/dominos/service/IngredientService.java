@@ -6,6 +6,7 @@ import ittalents.dominos.model.exceptions.BadRequestException;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
 @Transactional
 public class IngredientService extends AbstractService {
 
-    public Ingredient editIngredient(Integer id, String name, Double price) {
+    public Ingredient editIngredient(Integer id, String name, BigDecimal price) {
         // Finding the ingredient to be edited by its ID
        // Optional<Ingredient> ingredientOptional = ingredientRepository.findById(id);
         Ingredient ingredient = getIngredientById(id);

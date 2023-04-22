@@ -6,7 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Setter
 @Getter
@@ -19,12 +21,10 @@ public class Order {
     private int id;
 
     @Column
-    private double price;
+    private BigDecimal price;
 
     @Column(name = "time_and_date")
     private LocalDateTime orderingTime;
-
-
 
     @ManyToOne
     @JoinColumn(name = "order_status_id")
@@ -32,19 +32,22 @@ public class Order {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User owner;
-//    @ManyToOne
-//    @JoinColumn(name = "address_id")
-//    private Address address;
+    private User user;
+    @ManyToOne
+    @JoinColumn(name = "address_id")
+    private Address address;
 
+    @OneToMany(mappedBy = "id")
+    List<OrderedProduct> orderedProducts;
 
+    @OneToMany(mappedBy = "id")
+    List<OrderedPizza> orderedPizzas;
 
-    public Order( User user, double price,
-                  OrderStatus orderStatus ) {
-        this.owner = user;
+    public Order( BigDecimal price,User user, OrderStatus orderStatus, Address address) {
+        this.user = user;
         this.price = price;
         this.orderStatusId=orderStatus;
-      //  this.address=address;
+        this.address=address;
         this.orderingTime = LocalDateTime.now();
 
     }

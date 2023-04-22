@@ -1,14 +1,15 @@
 package ittalents.dominos.model.DTOs;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 public class OrderDTO {
     private Map<ItemInCartDTO, Integer> itemsWithQuantities;
-    private double price;
+    private BigDecimal price;
     String msg;
 
 
-    public OrderDTO(double price, String msg, Map<ItemInCartDTO, Integer> cart) {
+    public OrderDTO(BigDecimal price, String msg, Map<ItemInCartDTO, Integer> cart) {
         this.itemsWithQuantities = cart;
         this.price=price;
         this.msg=msg;
