@@ -23,7 +23,8 @@ public class UserRegisterDTO {
     private String phoneNumber;
     @Email(message = "Invalid email")
     private String email;
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{10,}$", message = "Weak password")
+    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&+=])(?=\\S+$).{10,}$", message = "Weak password")
     private String password;
     private String confirmPassword;
+    private boolean isAdmin;
 }

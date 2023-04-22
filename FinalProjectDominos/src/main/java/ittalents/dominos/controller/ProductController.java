@@ -36,7 +36,7 @@ public class ProductController extends AbstractController {
     public ProductEditDTO editProduct(@Valid @PathVariable("id") int id,@RequestBody ProductEditDTO dto , HttpSession s){
         isAdminLoggedIn(s);
         String name = dto.getName();
-        Double price = dto.getPrice();
+        double price = dto.getPrice();
         ProductEditDTO updatedProduct = productService.editProduct(id, name, price);
         return new ProductEditDTO(updatedProduct.getName(), updatedProduct.getPrice());
     }

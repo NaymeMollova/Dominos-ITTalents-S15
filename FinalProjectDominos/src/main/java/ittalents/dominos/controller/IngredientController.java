@@ -26,12 +26,13 @@ public class IngredientController extends AbstractController {
     //ADD INGREDIENT
     @PostMapping("/dominos/ingredients")
     public IngredientDTO addIngredient(@RequestBody IngredientDTO dto, HttpSession s) {
-        if (isAdminLoggedIn(s)) {
+        isAdminLoggedIn(s);
+        //if (isAdminLoggedIn(s)) {
             int loggedId = (int) s.getAttribute("LOGGED_ID");
             return ingredientService.addIngredient(dto, loggedId);
-        } else {
-            throw new UnauthorizedException("ala bala");
-        }
+//        } else {
+//            throw new UnauthorizedException("ala bala");
+//        }
     }
     //DELETE INGREDIENT
     @DeleteMapping("dominos/ingredients/{id}")
@@ -56,9 +57,10 @@ public class IngredientController extends AbstractController {
     //EDIT INGREDIENT
     @PutMapping("/dominos/ingredients/{id}")
     public IngredientDTO editIngredient(@PathVariable Integer id, @RequestBody IngredientDTO ingredientDTO, HttpSession session) {
-        if (!isAdminLoggedIn(session)) {
-            throw new UnauthorizedException("You need to be an admin to perform this action");
-        }
+       isAdminLoggedIn(session);
+//        if (!isAdminLoggedIn(session)) {
+//            throw new UnauthorizedException("You need to be an admin to perform this action");
+//        }
         // Retrieving the name and price from the DTO
         String name = ingredientDTO.getName();
         Double price = ingredientDTO.getPrice();

@@ -11,8 +11,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PizzaWithQuantityDTO {
+
+
     private int id;
- //   private BigDecimal price;
     private int quantity;
     private Pizza pizza;
     private int doughTypeId;

@@ -68,34 +68,35 @@ public abstract class AbstractController {
         return generateErrorDTO(errors, HttpStatus.BAD_REQUEST);
     }
 
-    protected boolean isAdminLoggedIn(HttpSession session) {
-        isUserLoggedIn(session);
+    protected void isAdminLoggedIn(HttpSession session) {
+        getLoggedId(session);
         int userId = (int) session.getAttribute("LOGGED_ID");
         if (!userService.findLoggedUser(userId).isAdmin()) {
             System.out.println(userService.findLoggedUser(userId).isAdmin());
             //return false
             throw new UnauthorizedException("You are not admin");
         }
-        return true;
+        //return true;
     }
 
-    protected boolean isUserLoggedIn(HttpSession session) {
-        if (!isThereLoggedInUser(session)) {
-            throw new UnauthorizedException("You have to log in first");
-        }
-        int userId = (int) session.getAttribute("LOGGED_ID");
-        if (userService.findLoggedUser(userId) == null) {
-            throw new UnauthorizedException("You have to log in first");
-        }
-        return true;
-    }
+//    protected boolean isUserLoggedIn(HttpSession session) {
+//        if (!isThereLoggedInUser(session)) {
+//            throw new UnauthorizedException("You have to log in first");
+//        }
+//        int userId = getLoggedId(session);
+//        ////////?????????????????????????????????//
+////        if (userService.findLoggedUser(userId) == null) {
+////            throw new UnauthorizedException("You have to log in first");
+////        }
+//        return true;
+//    }
 
-    private boolean isThereLoggedInUser(HttpSession session) {
-        if (session.getAttribute("LOGGED") == null) {
-            return false;
-        }
-        return true;
-    }
+//    protected boolean isThereLoggedInUser(HttpSession session) {
+//        if (session.getAttribute("LOGGED") == null) {
+//            return false;
+//        }
+//        return true;
+//    }
 
     protected int getLoggedId(HttpSession s) {
         if (s.getAttribute("LOGGED_ID") == null) {

@@ -1,5 +1,6 @@
 package ittalents.dominos.controller;
 import ittalents.dominos.model.DTOs.*;
+import ittalents.dominos.model.entities.User;
 import ittalents.dominos.model.exceptions.BadRequestException;
 import ittalents.dominos.model.exceptions.UnauthorizedException;
 import ittalents.dominos.service.UserService;
@@ -35,11 +36,13 @@ public class UserController extends AbstractController {
 
 
     @PostMapping("/dominos/users")
+    @Transactional
     public UserWithoutPassDTO register(@Valid @RequestBody UserRegisterDTO dto) {
         return userService.register(dto);
     }
 
     @PostMapping("/dominos/users/login")
+    @Transactional
     public UserWithoutPassDTO login(@RequestBody UserLoginDTO dto, HttpSession s) {
         UserWithoutPassDTO respDto = userService.login(dto);
         s.setAttribute("LOGGED", true);
@@ -48,43 +51,33 @@ public class UserController extends AbstractController {
     }
 
     @PostMapping("/dominos/users/logout")
+    @Transactional
     public void logout(HttpSession s) {
-        if (s != null && !s.isNew()) {
+        getLoggedId(s);
             s.invalidate();
-        } else {
-            throw new UnauthorizedException("First login");
-        }
     }
     @PutMapping("/dominos/users/profile")
+    @Transactional
     public UserWithoutPassDTO edit(@Valid @RequestBody UserEditDTO dto, HttpSession s) {
-        if (s != null && s.getAttribute("LOGGED") != null && !s.isNew()) {
-            int userId = (int) s.getAttribute("LOGGED_ID");
+        int userId = getLoggedId(s);
             UserWithoutPassDTO userWithoutPassDTO = userService.edit(userId, dto);
             return userWithoutPassDTO;
-        }else {
-            throw new BadRequestException("Users is not found");
-        }
     }
     @GetMapping("dominos/users/profile")
     public UserWithoutPassDTO view(HttpSession s){
-        isAdminLoggedIn(s);
-        if(s != null && s.getAttribute("LOGGED") != null && !s.isNew()){
-            int userId = (int) s.getAttribute("LOGGED_ID");
-            UserWithoutPassDTO userWithoutPassDTO = userService.viewProfile(userId);
-            return userWithoutPassDTO;
-        }else {
-            throw new BadRequestException("Users is not found");
-        }
+        int userId = getLoggedId(s);
+        UserWithoutPassDTO user = userService.viewProfile(userId);
+            return user;
     }
+
+
     @PutMapping("/dominos/users/password")
-    public UserWithoutPassDTO changePassword(@RequestBody UserChangePasswordDTO dto, HttpSession s){
-        if (s != null && s.getAttribute("LOGGED") != null && !s.isNew()) {
-            int userId = (int) s.getAttribute("LOGGED_ID");
-            UserWithoutPassDTO userWithoutPassDTO = userService.changePassword(userId);
-            return userWithoutPassDTO;
-        }else {
-            throw new BadRequestException("Users is not found");
-        }
+    @Transactional
+    public UserWithoutPassDTO changePassword(@Valid @RequestBody UserChangePasswordDTO dto, HttpSession s){
+        int userId = getLoggedId(s);
+        System.out.println(userId);
+        UserWithoutPassDTO userWithoutPassDTO = userService.changePassword(userId, dto);
+        return userWithoutPassDTO;
     }
     @GetMapping("/dominos/users")
     public List<UserWithoutPassDTO> getAll() {

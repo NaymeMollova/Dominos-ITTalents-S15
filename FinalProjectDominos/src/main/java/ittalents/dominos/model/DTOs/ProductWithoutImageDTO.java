@@ -15,13 +15,10 @@ import lombok.Setter;
 public class ProductWithoutImageDTO {
 
     private int id;
-
     @Pattern(regexp = "^[a-zA-Z]+$", message = "The name must be contain only letters")
-
     private String name;
     @DecimalMin("0.0")
     private double price;
-
     private int categoryId;
 
 

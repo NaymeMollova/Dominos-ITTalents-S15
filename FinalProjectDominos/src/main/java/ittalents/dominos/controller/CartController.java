@@ -30,14 +30,14 @@ public class CartController extends AbstractController{
 //  ADD PRODUCT
     @PostMapping("/dominos/cart/product")
     public List<ItemInCartInfoDTO> addProduct(HttpSession session, @RequestBody ProductWithQuantityDTO addedProductDTO){
-        isUserLoggedIn(session);
+        getLoggedId(session);
         Map<ItemInCartDTO, Integer> cart = getCart(session);
         cartService.addProduct(cart, addedProductDTO);
         return viewCart(session);
     }
     @PostMapping("/dominos/cart/pizza")
     public List<ItemInCartInfoDTO> addPizza(HttpSession session, @RequestBody PizzaWithQuantityDTO addedPizzaDTO){
-        isUserLoggedIn(session);
+        getLoggedId(session);
         Map<ItemInCartDTO, Integer> cart = getCart(session);
         cartService.addPizza(cart, addedPizzaDTO);
         return  viewCart(session);
@@ -45,7 +45,7 @@ public class CartController extends AbstractController{
     //VIEW CART
     @GetMapping("/dominos/cart")
     public List<ItemInCartInfoDTO> viewCart(HttpSession session){
-        isUserLoggedIn(session);
+        getLoggedId(session);
         Map<ItemInCartDTO, Integer> cart = getCart(session);
         return cart.entrySet().stream().map(item -> new ItemInCartInfoDTO
                         (item.getKey().getName(),item.getKey().getPrice(),item.getValue(),item.getKey().getDoughType(),
@@ -54,7 +54,7 @@ public class CartController extends AbstractController{
     }
     @GetMapping("/dominos/cart/price")
     public Double getPrice(HttpSession session){
-        isUserLoggedIn(session);
+        getLoggedId(session);
         Map<ItemInCartDTO, Integer> cart = getCart(session);
         session.setAttribute(CART,cart);
         return  cartService.getPrice(cart);
@@ -63,7 +63,7 @@ public class CartController extends AbstractController{
 
     @PostMapping("/dominos/orders")
     public OrderInfoDTO createOrder(HttpSession session, @RequestBody Address address){
-        isUserLoggedIn(session);
+        getLoggedId(session);
         Map<ItemInCartDTO, Integer> cart = (Map<ItemInCartDTO, Integer>) session.getAttribute(CART);
         return orderService.createOrder
                 (cart, userService.findLoggedUser(getLoggedId(session)),

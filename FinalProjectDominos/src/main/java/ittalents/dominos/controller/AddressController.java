@@ -18,20 +18,20 @@ public class AddressController extends AbstractController {
     //ADD ADDRESS
     @PostMapping("/dominos/addresses")
     public AddressInfoDTO addAddress(HttpSession session, @RequestBody AddressInfoDTO address) {
-        isUserLoggedIn(session);
+        getLoggedId(session);
         return addressService.saveAddress(getLoggedId(session), address.getAddress());
     }
 
     //DELETE ADDRESS
     @DeleteMapping("/dominos/addresses/{id}")
     public AddressInfoDTO deleteAddress(HttpSession session, @PathVariable int id) {
-        isUserLoggedIn(session);
+        getLoggedId(session);
         return addressService.deleteAddress(getLoggedId(session), id);
     }
     //VIEW ADDRESSES
     @GetMapping("/dominos/addresses")
     public List<AddressInfoDTO> getAllAddressesOfLoggedUser(HttpSession session) {
-        isUserLoggedIn(session);
+        getLoggedId(session);
         List<Address> addresses = addressService.getAllAddressesByOwner(getLoggedId(session));
         return addresses.stream()
                 .map(address -> new AddressInfoDTO(address.getAddressName()))
@@ -41,7 +41,7 @@ public class AddressController extends AbstractController {
     //EDIT ADDRESS
     @PutMapping("/dominos/addresses/{id}")
     public AddressInfoDTO editAddress(HttpSession session, @PathVariable int id, @RequestBody AddressInfoDTO newAddress){
-        isUserLoggedIn(session);
+        getLoggedId(session);
         return addressService.editAddress(newAddress.getAddress(), getLoggedId(session), id);
 
     }
