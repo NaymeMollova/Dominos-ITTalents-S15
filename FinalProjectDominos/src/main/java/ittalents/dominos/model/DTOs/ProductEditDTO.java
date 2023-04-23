@@ -16,6 +16,7 @@ import java.math.BigDecimal;
 public class ProductEditDTO {
 
 
+    private int id;
     @Pattern(regexp = "^[a-zA-Z]+$", message = "The name must be contain only letters")
     private String name;
     @DecimalMin("0.0")

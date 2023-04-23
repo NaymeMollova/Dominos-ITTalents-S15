@@ -20,7 +20,7 @@ public class PizzaController extends AbstractController {
     private PizzaService pizzaService;
 
     @GetMapping("/dominos/pizzas/{id}")
-    public PizzaDTO getPizza(@PathVariable("id") int id) {
+    public PizzaDTO getPizza(@PathVariable int id) {
         PizzaDTO pizzaDTO = pizzaService.getPizza(id);
         return pizzaDTO;
     }

@@ -29,7 +29,7 @@ public class UserService extends AbstractService {
 
         User u = mapper.map(register, User.class);
         u.setPassword(encoder.encode(u.getPassword()));
-    //    u.setAdmin(true);
+        //u.setAdmin(true);
         userRepository.save(u);
         return mapper.map(u, UserWithoutPassDTO.class);
     }

@@ -73,11 +73,8 @@ public abstract class AbstractController {
         getLoggedId(session);
         int userId = (int) session.getAttribute("LOGGED_ID");
         if (!userService.findLoggedUser(userId).isAdmin()) {
-            System.out.println(userService.findLoggedUser(userId).isAdmin());
-            //return false
             throw new UnauthorizedException("You are not admin");
         }
-        //return true;
     }
 
     protected int getLoggedId(HttpSession s) {

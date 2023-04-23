@@ -20,15 +20,7 @@ public class PizzaService extends AbstractService {
     private DoughTypeRepository pizzaDoughTypeRepository;
 
     public PizzaDTO getPizza(int id) {
-        // Търсене на пица в базата данни
-        //Optional<Pizza> optionalPizza = pizzaRepository.findById(id);
         Pizza pizza = getPizzaById(id);
-
-        // Проверка дали пицата съществува
-//        if (!optionalPizza.isPresent()) {
-//            throw new NotFoundException("Пица с ID " + id + " не беше намерена.");
-//        }
-        //Pizza pizza = optionalPizza.get();
         return mapper.map(pizza, PizzaDTO.class);
     }
 

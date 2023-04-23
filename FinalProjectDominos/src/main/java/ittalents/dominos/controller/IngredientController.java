@@ -2,12 +2,8 @@ package ittalents.dominos.controller;
 
 import ittalents.dominos.model.DTOs.IngredientDTO;
 import ittalents.dominos.model.entities.Ingredient;
-import ittalents.dominos.model.exceptions.NotFoundException;
-import ittalents.dominos.model.exceptions.UnauthorizedException;
-import ittalents.dominos.model.repositories.IngredientRepository;
 import ittalents.dominos.service.IngredientService;
 import jakarta.servlet.http.HttpSession;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,37 +14,20 @@ import java.util.List;
 public class IngredientController extends AbstractController {
 
     @Autowired
-    private IngredientRepository ingredientRepository;
-    @Autowired
-    private ModelMapper mapper;
-    @Autowired
     private IngredientService ingredientService;
 
-    //ADD INGREDIENT
     @PostMapping("/dominos/ingredients")
     public IngredientDTO addIngredient(@RequestBody IngredientDTO dto, HttpSession s) {
         isAdminLoggedIn(s);
-        //if (isAdminLoggedIn(s)) {
-            int loggedId = (int) s.getAttribute("LOGGED_ID");
-            return ingredientService.addIngredient(dto, loggedId);
-//        } else {
-//            throw new UnauthorizedException("ala bala");
-//        }
+        return ingredientService.addIngredient(dto);
+
     }
-    //DELETE INGREDIENT
     @DeleteMapping("dominos/ingredients/{id}")
     public void deleteIngredient(@PathVariable("id") int id, HttpSession s) {
         isAdminLoggedIn(s);
-//            Ingredient ingredient = ingredientService.findById(id);
-//            if (ingredient != null) {
-                ingredientService.deleteIngredient(id);
-//            }
-//        } else {
-//            throw new NotFoundException("not found");
-//        }
+        ingredientService.deleteIngredient(id);
     }
 
-    //DELETE INGREDIENT
     @GetMapping("/dominos/ingredients/{id}")
     public IngredientDTO viewIngredient(@PathVariable("id") int id) {
         IngredientDTO ingredientDTO = ingredientService.viewIngredient(id);
@@ -59,15 +38,8 @@ public class IngredientController extends AbstractController {
     @PutMapping("/dominos/ingredients/{id}")
     public IngredientDTO editIngredient(@PathVariable Integer id, @RequestBody IngredientDTO ingredientDTO, HttpSession session) {
        isAdminLoggedIn(session);
-//        if (!isAdminLoggedIn(session)) {
-//            throw new UnauthorizedException("You need to be an admin to perform this action");
-//        }
-        // Retrieving the name and price from the DTO
-        String name = ingredientDTO.getName();
-        BigDecimal price = ingredientDTO.getPrice();
-        // Editing the ingredient and retrieving the updated object
-        Ingredient updatedIngredient = ingredientService.editIngredient(id, name, price);
-        return new IngredientDTO(updatedIngredient.getName(), updatedIngredient.getPrice());
+        Ingredient updatedIngredient = ingredientService.editIngredient(id, ingredientDTO.getName(), ingredientDTO.getPrice());
+        return new IngredientDTO(id,updatedIngredient.getName(), updatedIngredient.getPrice());
     }
 
     @GetMapping("/dominos/ingredients")

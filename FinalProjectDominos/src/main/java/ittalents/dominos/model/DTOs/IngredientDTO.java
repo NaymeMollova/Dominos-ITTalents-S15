@@ -15,6 +15,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 public class IngredientDTO {
 
+    private int id;
     @Pattern(regexp = "^[a-zA-Z]+$", message = "The name must be contain only letters")
     private String name;
     @DecimalMin("0.0")
