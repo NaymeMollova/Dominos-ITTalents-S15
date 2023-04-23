@@ -10,11 +10,11 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@AllArgsConstructor
+@NoArgsConstructor
 @Setter
 @Getter
 @Entity(name = "orders")
-@AllArgsConstructor
-@NoArgsConstructor
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +28,7 @@ public class Order {
 
     @ManyToOne
     @JoinColumn(name = "order_status_id")
-    private OrderStatus orderStatusId;
+    private OrderStatus orderStatus;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -38,23 +38,27 @@ public class Order {
     private Address address;
 
     @OneToMany(mappedBy = "id")
-    List<OrderedProduct> orderedProducts;
+    private List<OrderedProduct> orderedProducts;
 
     @OneToMany(mappedBy = "id")
-    List<OrderedPizza> orderedPizzas;
+    private List<OrderedPizza> orderedPizzas;
 
-    public Order( BigDecimal price,User user, OrderStatus orderStatus, Address address) {
+
+
+    public Order( BigDecimal price,User user,
+                //  OrderStatus orderStatus,
+                  Address address) {
         this.user = user;
         this.price = price;
-        this.orderStatusId=orderStatus;
-        this.address=address;
+        this.orderStatus = orderStatus;
+        this.address = address;
         this.orderingTime = LocalDateTime.now();
-
+    }
     }
 
 
 //    public Order(Map<ItemInCartDTO, Integer> items, int userId, double price){
 //        this.OrderedProducts=items;
 //
-//    }
-}
+//  }
+

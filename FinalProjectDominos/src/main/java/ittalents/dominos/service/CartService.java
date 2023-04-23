@@ -1,9 +1,6 @@
 package ittalents.dominos.service;
 
-import ittalents.dominos.model.DTOs.ItemInCartDTO;
-import ittalents.dominos.model.DTOs.OrderInfoDTO;
-import ittalents.dominos.model.DTOs.PizzaWithQuantityDTO;
-import ittalents.dominos.model.DTOs.ProductWithQuantityDTO;
+import ittalents.dominos.model.DTOs.*;
 import ittalents.dominos.model.entities.*;
 import ittalents.dominos.model.exceptions.BadRequestException;
 import ittalents.dominos.model.repositories.*;
@@ -11,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -31,46 +29,107 @@ public class CartService extends AbstractService {
     PizzaRepository pizzaRepository;
 
 
-
-
-    public ItemInCartDTO addProduct(Map<ItemInCartDTO, Integer> cart, ProductWithQuantityDTO addedProductDTO) {
-        //  int
-        if (productRepository.findById(addedProductDTO.getId()).isEmpty()) {
-            throw new BadRequestException("No product with id " + addedProductDTO.getId() + " found");
-        }
-        BigDecimal price = (productRepository.findById(addedProductDTO.getId())).get().getPrice();
-
-        ItemInCartDTO addedProduct = new ItemInCartDTO(addedProductDTO.getId(), price, false);
-        addedProduct.setName((productRepository.findById(addedProductDTO.getId()).get()).getName());
-
-        Optional<Map.Entry<ItemInCartDTO, Integer>> alreadyAddedSameProduct = cart.entrySet().stream()
-                .filter(entry -> entry.getKey().equals(addedProduct))
-                .findFirst();
-
-        ItemInCartDTO productToAdd = new ItemInCartDTO(addedProductDTO.getId(), addedProduct.getName(),
-                price, false);
-
-        if (alreadyAddedSameProduct.isEmpty()) {
-
+    public ItemInCartDTO addProduct(Map<ItemInCartDTO, Integer> cart,
+                                    ProductWithQuantityDTO addedProductDTO) {
+        ItemInCartDTO productToAdd = takeProduct(addedProductDTO);
+        ItemInCartDTO alreadyAddedSameProduct = isProductAlreadyExistsInCart(cart, productToAdd);
+        if (alreadyAddedSameProduct == null) {
             cart.put(productToAdd, addedProductDTO.getQuantity());
-
         } else {
-            int quantityOfAlreadyAddedSameProduct = cart.get(alreadyAddedSameProduct.get().getKey());
+            int quantityOfAlreadyAddedSameProduct = cart.get(alreadyAddedSameProduct);
             int newQuantity = (quantityOfAlreadyAddedSameProduct + addedProductDTO.getQuantity());
-            //cart.put(alreadyAddedSameProduct.get().getKey(), newQuantity);
-            cart.put(addedProduct,newQuantity);
+            cart.put(productToAdd, newQuantity);
         }
         return productToAdd;
     }
+    public ItemInCartDTO deleteProduct (Map<ItemInCartDTO, Integer> cart, ProductWithQuantityDTO deletedProductDTO) {
+        ItemInCartDTO productToDelete= takeProduct(deletedProductDTO);
+        ItemInCartDTO alreadyExistedSameProduct = isProductAlreadyExistsInCart(cart, productToDelete);
+        if (alreadyExistedSameProduct == null) {
+            throw new BadRequestException("The product doesn't exist in the cart");
+        } else {
+            int quantityOfAlreadyAddedSameProduct = cart.get(alreadyExistedSameProduct);
+            if (quantityOfAlreadyAddedSameProduct == deletedProductDTO.getQuantity()) {
+                cart.remove(productToDelete);
+            } else {
+                int newQuantity = (quantityOfAlreadyAddedSameProduct - deletedProductDTO.getQuantity());
+                cart.put(productToDelete, newQuantity);
+            }
+        }
+        return productToDelete;
 
+    }
 
-    public ItemInCartDTO addPizza(Map<ItemInCartDTO,
-            Integer> cart, PizzaWithQuantityDTO addedPizzaDTO) {
-        if (pizzaRepository.findById(addedPizzaDTO.getPizzaId()).isEmpty()) {
-            throw new BadRequestException("No pizza with id " + addedPizzaDTO.getPizzaId() + " found");
+    private ItemInCartDTO takeProduct(ProductWithQuantityDTO neededProductDTO) {
+        if (productRepository.findById(neededProductDTO.getId()).isEmpty()) {
+            throw new BadRequestException("No product with id " + neededProductDTO.getId() + " found");
+        }
+        BigDecimal price = (productRepository.findById(neededProductDTO.getId())).get().getPrice();
+        ItemInCartDTO addedProduct = new ItemInCartDTO(neededProductDTO.getId(), price, false);
+        addedProduct.setName((productRepository.findById(neededProductDTO.getId()).get()).getName());
+
+        ItemInCartDTO neededProduct = new ItemInCartDTO(neededProductDTO.getId(), addedProduct.getName(),
+                price, false);
+        return neededProduct;
+    }
+
+    private ItemInCartDTO isProductAlreadyExistsInCart(Map<ItemInCartDTO, Integer> cart, ItemInCartDTO productToAdd) {
+        Optional<Map.Entry<ItemInCartDTO, Integer>> alreadyAddedSameProduct = cart.entrySet().stream()
+                .filter(entry -> entry.getKey().equals(productToAdd))
+                .findFirst();
+        if (alreadyAddedSameProduct.isEmpty()) {
+            return null;
+        }
+        return alreadyAddedSameProduct.get().getKey();
+    }
+
+    public ItemInCartDTO addPizza(Map<ItemInCartDTO, Integer> cart,
+                                  PizzaWithQuantityDTO addedPizzaDTO) {
+        ItemInCartDTO pizzaToAdd = takePizza(addedPizzaDTO);
+        ItemInCartDTO alreadyExistedSamePizza = isPizzaAlreadyExistsInCart(cart, pizzaToAdd);
+        if (alreadyExistedSamePizza == null) {
+            cart.put(pizzaToAdd, addedPizzaDTO.getQuantity());
+        } else {
+            int quantityOfAlreadyAddedSameProduct = cart.get(alreadyExistedSamePizza);
+            int newQuantity = (quantityOfAlreadyAddedSameProduct + addedPizzaDTO.getQuantity());
+            cart.put(pizzaToAdd, newQuantity);
+        }
+        return pizzaToAdd;
+    }
+
+    public ItemInCartDTO deletePizza(Map<ItemInCartDTO, Integer> cart,
+                                     PizzaWithQuantityDTO deletedPizzaDTO) {
+        ItemInCartDTO pizzaToDelete = takePizza(deletedPizzaDTO);
+        ItemInCartDTO alreadyAddedSamePizza = isPizzaAlreadyExistsInCart(cart,pizzaToDelete);
+        if (alreadyAddedSamePizza==null) {
+            throw new BadRequestException("The pizza doesn't exist in the cart");
+        } else {
+            int quantityOfAlreadyAddedSamePizza = cart.get(alreadyAddedSamePizza);
+            if (quantityOfAlreadyAddedSamePizza == deletedPizzaDTO.getQuantity()) {
+                cart.remove(pizzaToDelete);
+            } else {
+                int newQuantity = (quantityOfAlreadyAddedSamePizza - deletedPizzaDTO.getQuantity());
+                cart.put(pizzaToDelete, newQuantity);
+            }
+        }
+        return pizzaToDelete;
+
+    }
+    private ItemInCartDTO isPizzaAlreadyExistsInCart(Map<ItemInCartDTO, Integer> cart, ItemInCartDTO pizzaToAdd) {
+        Optional<Map.Entry<ItemInCartDTO, Integer>> alreadyAddedSamePizza = cart.entrySet().stream()
+                .filter(entry -> entry.getKey().equals(pizzaToAdd))
+                .findFirst();
+        if (alreadyAddedSamePizza.isEmpty()) {
+            return null;
+        }
+        return alreadyAddedSamePizza.get().getKey();
+    }
+    private ItemInCartDTO takePizza(PizzaWithQuantityDTO addedPizzaDTO) {
+        if (pizzaRepository.findById(addedPizzaDTO.getId()).isEmpty()) {
+            throw new BadRequestException("No pizza with id " + addedPizzaDTO.getId() + " found");
         }
 
-        BigDecimal price = ((pizzaRepository.findById(addedPizzaDTO.getPizzaId())).get().getPrice()).add
+        BigDecimal price = ((pizzaRepository.findById(addedPizzaDTO.getId())).get().getPrice()).add
                 ((pizzaSizeRepository.findById(addedPizzaDTO.getPizzaSizeId())).get().getPrice()).add
                 ((doughTypeRepository.findById(addedPizzaDTO.getDoughTypeId())).get().getPrice());
 
@@ -80,28 +139,17 @@ public class CartService extends AbstractService {
         DoughType doughType = doughTypeRepository.findById(addedPizzaDTO.getDoughTypeId()).get();
         System.out.println(pizzaSize.getName());
 
-        ItemInCartDTO addedPizza = new ItemInCartDTO(addedPizzaDTO.getPizzaId(),
+        ItemInCartDTO addedPizza = new ItemInCartDTO(addedPizzaDTO.getId(),
                 price, true, pizzaSize, doughType, pizzaRepository.
-                findById(addedPizzaDTO.getPizzaId()).get(), pizzaSize.getName());
-        addedPizza.setName((pizzaRepository.findById(addedPizzaDTO.getPizzaId()).get()).getName());
+                findById(addedPizzaDTO.getId()).get(), pizzaSize.getName());
 
-        Optional<Map.Entry<ItemInCartDTO, Integer>> alreadyAddedSamePizza = cart.entrySet().stream()
-                .filter(entry -> entry.getKey().equals(addedPizza))
-                .findFirst();
+        addedPizza.setName((pizzaRepository.findById(addedPizzaDTO.getId()).get()).getName());
 
-        ItemInCartDTO pizzaToAdd = new ItemInCartDTO(addedPizzaDTO.getPizzaId(), addedPizza.getName(),
-                price, true, pizzaSize, doughType,addedPizza.getPizza(), pizzaSize.getName() );
-
-        if (alreadyAddedSamePizza.isEmpty()) {
-            cart.put(pizzaToAdd, addedPizzaDTO.getQuantity());
-
-        } else {
-            int quantityOfAlreadyAddedSamePizza = cart.get(alreadyAddedSamePizza.get().getKey());
-            int newQuantity = (quantityOfAlreadyAddedSamePizza + addedPizzaDTO.getQuantity());
-            cart.put(alreadyAddedSamePizza.get().getKey(), newQuantity);
-        }
-        return pizzaToAdd;
+//        ItemInCartDTO pizzaToAdd = new ItemInCartDTO(addedPizzaDTO.getPizzaId(), addedPizza.getName(),
+//                price, true, pizzaSize, doughType, addedPizza.getPizza(), pizzaSize.getName());
+        return addedPizza;
     }
+
     public BigDecimal getPrice(Map<ItemInCartDTO, Integer> cart) {
         return cart.entrySet()
                 .stream()
@@ -110,17 +158,19 @@ public class CartService extends AbstractService {
 
     }
 
-    public OrderInfoDTO createOrder(Map<ItemInCartDTO, Integer> cart, int userId,
+    public Order createOrder(Map<ItemInCartDTO, Integer> cart, int userId,
                                     BigDecimal price, int addressId) {
-        System.out.println(3);
-        OrderStatus orderStatus = orderStatusRepository.getReferenceById(1);
-        System.out.println(4);
-        Order newOrder = new Order(price, userRepository.getReferenceById(userId),
-                orderStatus,
-                addressRepository.getReferenceById(addressId));
-        orderRepository.save(newOrder);
-        System.out.println("гърми");
+        if(cart.isEmpty()){
+            throw new BadRequestException("Your cart is empty");
+        }
+        Order newOrder= new Order();
+        newOrder.setPrice(price);
+        newOrder.setOrderingTime(LocalDateTime.now());
+        newOrder.setAddress(addressRepository.getReferenceById(addressId));
+        newOrder.setOrderStatus( orderStatusRepository.getReferenceById(1));
+        newOrder.setUser(userRepository.getReferenceById(userId));
 
+        orderRepository.save(newOrder);
         List<OrderedProduct> orderedProducts = cart.entrySet().stream()
                 .filter(e -> (!e.getKey().isPizza()))
                 .flatMap(e -> IntStream.range(0, e.getValue())
@@ -129,7 +179,7 @@ public class CartService extends AbstractService {
                                         getReferenceById(e.getKey().getId()), newOrder))).map(orderedProductRepository::save)
                 .collect(Collectors.toList());
         orderedProductRepository.saveAll(orderedProducts);
-        System.out.println("гърми 2");
+
         List<OrderedPizza> orderedPizzas = cart.entrySet().stream()
                 .filter(e -> (e.getKey().isPizza()))
                 .flatMap(e -> IntStream.range(0, e.getValue())
@@ -140,18 +190,57 @@ public class CartService extends AbstractService {
                                 e.getKey().getPizza())))
                 .collect(Collectors.toList());
         orderedPizzaRepository.saveAll(orderedPizzas);
-
-
-
         newOrder.setOrderedPizzas(orderedPizzas);
         newOrder.setOrderedProducts(orderedProducts);
         orderRepository.findById(newOrder.getId()).get().setOrderedPizzas(orderedPizzas);
         orderRepository.findById(newOrder.getId()).get().setOrderedProducts(orderedProducts);
-        String msg = "Thank you for your order!";
-        OrderInfoDTO orderInfoDTO = new OrderInfoDTO(price,
-                newOrder.getOrderingTime(),
-                orderStatus.getName().toString(), cart, msg,
-                addressRepository.getReferenceById(addressId).getAddressName());
-        return orderInfoDTO;
+        OrderInfoDTO orderInfoDTO = mapper.map(newOrder, OrderInfoDTO.class);
+        processOrderStatus(newOrder);
+////        orderInfoDTO.setItems(cart.entrySet().stream().map(item ->
+////                mapper.map(item, ItemInCartInfoDTO.class)).collect(Collectors.toList()));
+////orderInfoDTO.setAddressName(addressRepository.getReferenceById(addressId).getAddressName());
+//
+//
+//        orderInfoDTO.setItems(cart.entrySet().stream().map(item -> new ItemInCartInfoDTO
+//                        (item.getKey().getId(),item.getKey().getName(), item.getKey().getPrice(), item.getValue(), item.getKey().getDoughType(),
+//                                item.getKey().getPizzaSize(), item.getKey().isPizza()))
+//                .collect(Collectors.toList()));
+////
+
+        orderInfoDTO.setItems(cart.entrySet().stream().map(item -> new ItemInCartInfoDTO
+                        (item.getKey().getId(),item.getKey().getName(),
+                                item.getKey().getPrice(), item.getValue(),
+                                item.getKey().getDoughType(),
+                                item.getKey().getPizzaSize(), item.getKey().isPizza()))
+                .collect(Collectors.toList()));
+orderInfoDTO.getItems().stream().forEach(e-> System.out.println(e));
+
+
+
+        return orderRepository.findById(newOrder.getId()).get();
+    }
+
+
+    private void processOrderStatus(Order order) {
+        new Thread(() -> {
+            try {
+                Thread.sleep(5000);
+                order.setOrderStatus(orderStatusRepository.getReferenceById(2));
+                orderRepository.save(order);
+                Thread.sleep(5000);
+                order.setOrderStatus(orderStatusRepository.getReferenceById(3));
+                orderRepository.save(order);
+                Thread.sleep(5000);
+                order.setOrderStatus(orderStatusRepository.getReferenceById(4));
+                orderRepository.save(order);
+                Thread.sleep(5000);
+                order.setOrderStatus(orderStatusRepository.getReferenceById(5));
+                orderRepository.save(order);
+            } catch (InterruptedException e) {
+                System.out.println("Something is wrong with your order");
+            }
+        }).start();
     }
 }
+
+

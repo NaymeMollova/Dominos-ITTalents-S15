@@ -1,6 +1,6 @@
 package ittalents.dominos.service;
 
-import ittalents.dominos.model.DTOs.OrderInfoDTO;
+import ittalents.dominos.model.DTOs.OrderHistoryDTO;
 import ittalents.dominos.model.repositories.OrderRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,18 +12,21 @@ import java.util.stream.Collectors;
 @Service
 public class OrderService extends AbstractService{
 
-    public List<OrderInfoDTO> getAll;
     @Autowired
     private OrderRepository orderRepository;
     @Autowired
     private ModelMapper modelMapper;
 
-    public List<OrderInfoDTO> getAll() {
-        return orderRepository.findAll()
+    public List<OrderHistoryDTO> getAll() {
+        return orderRepository.findAllByOrderByIdDesc()
                 .stream()
-                .map(u -> modelMapper.map(u, OrderInfoDTO.class))
+                .map(u -> modelMapper.map(u, OrderHistoryDTO.class))
                 .collect(Collectors.toList());
+
+
+
     }
+
 
 
 }

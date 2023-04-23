@@ -18,6 +18,8 @@ public class Address {
     @JoinColumn(name = "user_id")
     private User owner;
 
-
-
+//    @Override
+//    public String toString() {
+//        return this.addressName;
+//    }
 }

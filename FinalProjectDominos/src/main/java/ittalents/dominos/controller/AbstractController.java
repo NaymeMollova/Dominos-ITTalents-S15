@@ -1,5 +1,6 @@
 package ittalents.dominos.controller;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import ittalents.dominos.model.DTOs.ErrorDTO;
 import ittalents.dominos.model.exceptions.BadRequestException;
 import ittalents.dominos.model.exceptions.NotFoundException;
@@ -21,8 +22,8 @@ public abstract class AbstractController {
     public static final String CART = "CART";
     @Autowired
     protected UserService userService;
-
-
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime time = LocalDateTime.now();
 
     @ExceptionHandler(BadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -53,7 +54,7 @@ public abstract class AbstractController {
 
         return ErrorDTO.builder()
                 .msg(o)
-                .time(LocalDateTime.now())
+                .time(time)
                 .status(s.value())
                 .build();
     }
@@ -69,15 +70,32 @@ public abstract class AbstractController {
         return generateErrorDTO(errors, HttpStatus.BAD_REQUEST);
     }
 
-    protected void isAdminLoggedIn(HttpSession session) {
-        getLoggedId(session);
-        int userId = (int) session.getAttribute("LOGGED_ID");
+    protected boolean isAdminLoggedIn(HttpSession session) {
+        isUserLoggedIn(session);
+        int userId = getLoggedId(session);
         if (!userService.findLoggedUser(userId).isAdmin()) {
             System.out.println(userService.findLoggedUser(userId).isAdmin());
-            //return false
             throw new UnauthorizedException("You are not admin");
         }
-        //return true;
+        return true;
+    }
+
+    protected boolean isUserLoggedIn(HttpSession session) {
+        if (!isThereLoggedInUser(session)) {
+            throw new UnauthorizedException("You have to log in first");
+        }
+        int userId = getLoggedId(session);
+        if (userService.findLoggedUser(userId) == null) {
+            throw new UnauthorizedException("You have to log in first");
+        }
+        return true;
+    }
+
+    private boolean isThereLoggedInUser(HttpSession session) {
+        if (session.getAttribute("LOGGED") == null) {
+            return false;
+        }
+        return true;
     }
 
     protected int getLoggedId(HttpSession s) {
@@ -86,7 +104,17 @@ public abstract class AbstractController {
         }
         return (int) s.getAttribute("LOGGED_ID");
     }
-
+//    protected Map<ItemInCartDTO, Integer> getCart(HttpSession session){
+//        Map<ItemInCartDTO, Integer> cart;
+//        if(session.getAttribute(CART) == null){
+//            cart = new LinkedHashMap<>();
+//        }
+//        else {
+//            cart = (Map<ItemInCartDTO, Integer>) session.getAttribute(CART);
+//        }
+//        session.setAttribute(CART,cart);
+//        return cart;
+//    }
 
 }
 

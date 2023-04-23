@@ -44,7 +44,13 @@ public class OrderedPizza {
         this.doughType = doughType;
     }
 
-//    public OrderedPizza(Pizza pizza, Order order) {
+//    @Override
+//    public String toString() {
+//        return String.format("%s %s from %s dough",
+//                this.pizzaSize.getName(), this.pizza.getName(),this.doughType.getName());
+//    }
+
+    //    public OrderedPizza(Pizza pizza, Order order) {
 //        this.pizza = pizza;
 //        this.order = order;
 //    }
