@@ -17,7 +17,7 @@ public interface AddressRepository extends JpaRepository<Address, Integer> {
 
     Optional<Address> findByAddressName(String address);
 
-    Optional<User> findOwnerById(@Param("addressId") int addressId);
+    //Optional<User> findOwnerById(@Param("addressId") int addressId);
 
 
 

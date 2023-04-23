@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 public class ProductWithoutImageDTO {
 
     private int id;
-    @Pattern(regexp = "^[a-zA-Z]+$", message = "The name must be contain only letters")
+    @Pattern(regexp = "^[a-zA-Z ]+$", message = "The name must be contain only letters")
     private String name;
     @DecimalMin("0.0")
     private BigDecimal price;

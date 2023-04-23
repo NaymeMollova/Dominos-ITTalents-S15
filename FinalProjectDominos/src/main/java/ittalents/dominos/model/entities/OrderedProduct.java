@@ -14,7 +14,6 @@ public class OrderedProduct {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
     @ManyToOne
     @JoinColumn(name = "order_id")
     private Order order;

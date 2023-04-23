@@ -10,9 +10,11 @@ import java.util.Optional;
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
 
 
-    Category save(Category categoryName);
+   // Category save(Category categoryName);
 
-    Optional<Category> findByCategoryName(String categoryName);
+    //Optional<Category> findByCategoryName(String categoryName);
+
+    boolean existsByName(String name);
 
 
 }
