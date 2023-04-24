@@ -26,15 +26,13 @@ public class CartController extends AbstractController {
     protected ProductRepository productRepository;
 
 
-    //  ADD PRODUCT
-    @PostMapping("/dominos/cart/product")
+    @PostMapping("/dominos/cart")
     public List<ItemInCartInfoDTO> addProduct(HttpSession session, @RequestBody ProductWithQuantityDTO addedProductDTO) {
         getLoggedId(session);
         Map<ItemInCartDTO, Integer> cart = getCart(session);
         cartService.addProduct(cart, addedProductDTO);
         return viewCart(session);
     }
-    //DELETE PRODUCT
 
     @DeleteMapping("/dominos/cart/products")
     public List<ItemInCartInfoDTO> deleteProduct(HttpSession session, @RequestBody ProductWithQuantityDTO addedProductDTO) {
@@ -49,7 +47,7 @@ public class CartController extends AbstractController {
 
     }
 
-    //ADD PIZZA
+
     @PostMapping("/dominos/cart/pizza")
     public List<ItemInCartInfoDTO> addPizza(HttpSession session, @RequestBody PizzaWithQuantityDTO addedPizzaDTO) {
         getLoggedId(session);
@@ -58,7 +56,7 @@ public class CartController extends AbstractController {
         return viewCart(session);
     }
 
-    //DELETE PIZZA
+
     @DeleteMapping("/dominos/cart/pizzas")
     public List<ItemInCartInfoDTO> deletePizza(HttpSession session,
                                                @RequestBody PizzaWithQuantityDTO deletedPizzaDTO) {
@@ -72,7 +70,6 @@ public class CartController extends AbstractController {
 
     }
 
-    //VIEW CART
     @GetMapping("/dominos/cart")
     public List<ItemInCartInfoDTO> viewCart(HttpSession session) {
         getLoggedId(session);
@@ -88,7 +85,6 @@ public class CartController extends AbstractController {
                 .collect(Collectors.toList());
     }
 
-    //VIEW TOTAL PRICE
     @GetMapping("/dominos/cart/price")
     public BigDecimal getCartPrice(HttpSession session) {
         getLoggedId(session);
@@ -97,7 +93,6 @@ public class CartController extends AbstractController {
         return cartService.getCartPrice(cart);
     }
 
-    //CREATE ORDER
     @PostMapping("/dominos/orders")
     public OrderInfoDTO createOrder(HttpSession session, @RequestBody AddressForOrderDTO address) {
         getLoggedId(session);

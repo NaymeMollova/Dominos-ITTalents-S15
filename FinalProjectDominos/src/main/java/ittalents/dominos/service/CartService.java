@@ -197,7 +197,7 @@ public class CartService extends AbstractService {
         if(user.isEmpty()){
             throw new BadRequestException("Address with id "+ addressDTO.getAddressId() + " does not belong to you");
         }
-        Order newOrder = new Order(price, user.get(), orderStatusRepository.findById(1).get(),  address.get());
+        Order newOrder = new Order(price, user.get(), orderStatusRepository.findById(2).get(),  address.get());
         orderRepository.save(newOrder);
 
         List<OrderedProduct> orderedProducts = cart.entrySet().stream()
@@ -237,9 +237,6 @@ public class CartService extends AbstractService {
         new Thread(() -> {
             try {
                 Thread.sleep(5000);
-                order.setOrderStatus(orderStatusRepository.getReferenceById(2));
-                orderRepository.save(order);
-                Thread.sleep(5000);
                 order.setOrderStatus(orderStatusRepository.getReferenceById(3));
                 orderRepository.save(order);
                 Thread.sleep(5000);
@@ -247,6 +244,9 @@ public class CartService extends AbstractService {
                 orderRepository.save(order);
                 Thread.sleep(5000);
                 order.setOrderStatus(orderStatusRepository.getReferenceById(5));
+                orderRepository.save(order);
+                Thread.sleep(5000);
+                order.setOrderStatus(orderStatusRepository.getReferenceById(6));
                 orderRepository.save(order);
             } catch (InterruptedException e) {
                 System.out.println("Something is wrong with your order");

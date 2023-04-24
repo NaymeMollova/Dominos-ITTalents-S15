@@ -11,7 +11,6 @@ public class Address {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
     @Column(name = "address_name")
     private String addressName;
     @ManyToOne

@@ -1,49 +1,45 @@
 package ittalents.dominos.controller;
 
+import ittalents.dominos.model.DTOs.AddressEditDTO;
 import ittalents.dominos.model.DTOs.AddressInfoDTO;
-import ittalents.dominos.model.entities.Address;
 import ittalents.dominos.service.AddressService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @RestController
 public class AddressController extends AbstractController {
     @Autowired
     private AddressService addressService;
 
-    //ADD ADDRESS
     @PostMapping("/dominos/addresses")
-    public AddressInfoDTO addAddress(HttpSession session, @RequestBody AddressInfoDTO address) {
+    public AddressInfoDTO addAddress(@Valid @RequestBody AddressInfoDTO addressInfoDTO, HttpSession session) {
         getLoggedId(session);
-        return addressService.saveAddress(getLoggedId(session), address.getAddress());
+        return addressService.addAddress(addressInfoDTO);
     }
 
-    //DELETE ADDRESS
     @DeleteMapping("/dominos/addresses/{id}")
-    public AddressInfoDTO deleteAddress(HttpSession session, @PathVariable int id) {
+    public void deleteAddress(HttpSession session, @PathVariable("id") int addressId) {
         getLoggedId(session);
-        return addressService.deleteAddress(getLoggedId(session), id);
+        addressService.deleteAddress(addressId);
     }
-    //VIEW ADDRESSES
+
     @GetMapping("/dominos/addresses")
     public List<AddressInfoDTO> getAllAddressesOfLoggedUser(HttpSession session) {
         getLoggedId(session);
-        List<Address> addresses = addressService.getAllAddressesByUser(getLoggedId(session));
-        return addresses.stream()
-                .map(address -> new AddressInfoDTO(address.getAddressName()))
-                .collect(Collectors.toList());
+        return addressService.getAllAddressesByUser(getLoggedId(session));
     }
 
-    //EDIT ADDRESS
     @PutMapping("/dominos/addresses/{id}")
-    public AddressInfoDTO editAddress(HttpSession session, @PathVariable int id, @RequestBody AddressInfoDTO newAddress){
+    public AddressEditDTO editAddress(@Valid @RequestBody AddressInfoDTO newAddress, HttpSession session, @PathVariable int id){
         getLoggedId(session);
-        return addressService.editAddress(newAddress.getAddress(), getLoggedId(session), id);
-
+        String name = newAddress.getAddressName();
+        AddressInfoDTO updateAddress = addressService.editAddress(name, id);
+        return new AddressEditDTO(id, updateAddress.getAddressName());
     }
 
 

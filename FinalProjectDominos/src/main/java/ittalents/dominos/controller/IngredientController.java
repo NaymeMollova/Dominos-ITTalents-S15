@@ -34,7 +34,7 @@ public class IngredientController extends AbstractController {
         return ingredientDTO;
     }
 
-    //EDIT INGREDIENT
+
     @PutMapping("/dominos/ingredients/{id}")
     public IngredientDTO editIngredient(@PathVariable Integer id, @RequestBody IngredientDTO ingredientDTO, HttpSession session) {
        isAdminLoggedIn(session);

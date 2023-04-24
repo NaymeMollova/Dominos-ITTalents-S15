@@ -7,15 +7,17 @@ import ittalents.dominos.model.entities.Category;
 import ittalents.dominos.model.entities.Product;
 import ittalents.dominos.model.exceptions.BadRequestException;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
 public class ProductService extends AbstractService {
 
+    @Transactional
     public ProductWithoutImageDTO addProduct(ProductWithoutImageDTO productDTO){
         Product product = new Product();
         Category category = getCategoryById(productDTO.getCategoryId());
@@ -30,6 +32,7 @@ public class ProductService extends AbstractService {
         return mapper.map(product, ProductWithoutImageDTO.class);
     }
 
+    @Transactional
     public void deleteProduct(int id){
         Product product = getProductById(id);
         productRepository.deleteById(id);
@@ -40,6 +43,7 @@ public class ProductService extends AbstractService {
         return mapper.map(product, ProductDTO.class);
     }
 
+    @Transactional
     public ProductEditDTO editProduct(Integer id, String name, BigDecimal price) {
         Product product = getProductById(id);
         if(productRepository.existsByName(name)){

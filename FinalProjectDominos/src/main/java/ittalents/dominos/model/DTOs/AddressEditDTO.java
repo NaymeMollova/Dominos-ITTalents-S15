@@ -10,9 +10,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddressInfoDTO {
+public class AddressEditDTO {
     private int id;
     @Pattern(regexp = "^[a-zA-Z0-9\\s]{1,255}$", message = "Invalid address")
     private String addressName;
-    private int userId;
+    //private int userId;
 }

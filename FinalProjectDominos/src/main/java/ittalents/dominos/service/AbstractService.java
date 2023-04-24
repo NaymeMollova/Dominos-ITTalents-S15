@@ -30,8 +30,9 @@ public abstract class AbstractService {
     protected AddressRepository addressRepository;
 
 
-    protected User getUserById(int id){
-        return userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
+    public User getUserById(int id){
+        return userRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("User not found"));
     }
     public Product getProductById(int id){
         return productRepository.findById(id).orElseThrow(
@@ -51,6 +52,11 @@ public abstract class AbstractService {
     public Ingredient getIngredientById(int id){
         return ingredientRepository.findById(id).orElseThrow(
                 () -> new NotFoundException("Ingredient not found")
+        );
+    }
+    public Address getAddressById(int id){
+        return addressRepository.findById(id).orElseThrow(
+                () -> new NotFoundException("Address not found")
         );
     }
     public User findLoggedUser(int userId) {

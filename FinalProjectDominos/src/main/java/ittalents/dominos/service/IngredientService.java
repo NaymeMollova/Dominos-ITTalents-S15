@@ -10,19 +10,20 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
 public class IngredientService extends AbstractService {
 
+    @Transactional
     public Ingredient editIngredient(Integer id, String name, BigDecimal price) {
         Ingredient ingredient = getIngredientById(id);
         if(ingredientRepository.existsByName(name)){
             throw new BadRequestException("Ingredient with name " + name + " already exists.");
         }
-            ingredient.setName(name);
-            ingredient.setPrice(price);
-            return ingredientRepository.save(ingredient);
-        }
+        ingredient.setName(name);
+        ingredient.setPrice(price);
+        return ingredientRepository.save(ingredient);
+    }
 
+    @Transactional
     public IngredientDTO addIngredient(IngredientDTO ingredientDTO){
         if(ingredientRepository.existsByName(ingredientDTO.getName())){
             throw new BadRequestException("Ingredient with name " + ingredientDTO.getName() + " already exists!");
@@ -31,6 +32,7 @@ public class IngredientService extends AbstractService {
         ingredientRepository.save(ingredient);
         return mapper.map(ingredient, IngredientDTO.class);
     }
+    @Transactional
     public void deleteIngredient(int id){
         Ingredient ingredient = getIngredientById(id);
         ingredientRepository.deleteById(id);
@@ -47,6 +49,5 @@ public class IngredientService extends AbstractService {
                 .map(u -> mapper.map(u, IngredientDTO.class))
                 .collect(Collectors.toList());
     }
-
 
 }

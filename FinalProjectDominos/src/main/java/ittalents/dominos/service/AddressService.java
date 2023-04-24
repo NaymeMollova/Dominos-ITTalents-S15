@@ -11,97 +11,49 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
-
 public class AddressService extends AbstractService {
     @Autowired
     private AddressRepository addressRepository;
 
-    public void isAddressValid(String address) {
-        throwExceptionIfAddressInvalid(address);
+    @Transactional
+    public AddressInfoDTO addAddress(AddressInfoDTO addressInfoDTO) {
+        Address address = new Address();
+        User user = getUserById(addressInfoDTO.getUserId());
+        System.out.println(user);
+        if(addressRepository.existsByAddressName(addressInfoDTO.getAddressName())){
+            throw new BadRequestException("Address already exist in your profile");
+        }
+        address.setAddressName(addressInfoDTO.getAddressName());
+        address.setUser(user);
+        addressRepository.save(address);
+        return mapper.map(address, AddressInfoDTO.class);
+    }
+
+    public List<AddressInfoDTO> getAllAddressesByUser(int id) {
+        return addressRepository.findAllByUser(getUserById(id))
+                .stream()
+                .map(address -> mapper.map(address, AddressInfoDTO.class))
+                .collect(Collectors.toList());
     }
 
     @Transactional
-    public AddressInfoDTO saveAddress(int loggedId, String addressName) {
-        isAddressValid(addressName);
-        checkIfAddressNameExistsInProfile(addressName, loggedId);
-        Address a = new Address();
-        a.setAddressName(addressName);
-        a.setUser(findLoggedUser(loggedId));
-        addressRepository.save(a);
-        return new AddressInfoDTO(a.getAddressName());
-    }
-
-
-    public IllegalArgumentException throwExceptionIfAddressInvalid(String address) {
-        // Check that the address string is not empty
-        if (address == null || address.trim().isEmpty()) {
-            throw new BadRequestException("Address cannot be empty");
-        }
-
-        // Check that the address contains at least one word or number separated from other characters by spaces or punctuation marks
-
-        if (!address.matches(".*[a-zA-Z0-9]+.*")) {
-
-            if (!address.matches(".[a-zA-Z0-9]+.")) {
-
-                throw new BadRequestException("Address must contain at least one word or number");
-            }
-
-            // Check that the address is not too long, usually limited to 255 characters
-            if (address.length() > 255) {
-                throw new BadRequestException("Address is too long");
-            }
-
-        }
-        return null;
-    }
-
-    public void checkIfAddressNameExistsInProfile(String address, int loggedId) {
-        Optional<Address> existingAddress = addressRepository.findByAddressName(address);
-        if (existingAddress.isPresent()) {
-            if (existingAddress.get().getUser().getId() == loggedId) {
-                throw new BadRequestException("Address already exists in your profile");
-            }
-        }
-    }
-
-    public List<Address> getAllAddressesByUser(int id) {
-        return addressRepository.findAllByUser(findLoggedUser(id));
-    }
-
-    public AddressInfoDTO deleteAddress(int loggedId, int addressId) {
-        Optional<Address> existedAddress = addressRepository.findById(addressId);
-        if (existedAddress.isEmpty()) {
-            throw new BadRequestException("Address with id " + addressId + " doesn't exist");
-        }
-        Optional<User> owner = userRepository.findByAddressNames(existedAddress);
-
-        if (owner.isPresent() && loggedId == owner.get().getId()) {
-            throw new BadRequestException("Address with id " + addressId + " doesn't exist in your profile");
-        }
-        Address deletedAddress = addressRepository.getReferenceById(addressId);
+    public void deleteAddress(int addressId) {
+        Address address = getAddressById(addressId);
         addressRepository.deleteById(addressId);
-        return new AddressInfoDTO(deletedAddress.getAddressName());
     }
 
-    public AddressInfoDTO editAddress(String addressName, int loggedId, int addressId) {
-        Optional<Address> existedAddress = addressRepository.findById(addressId);
-        if (existedAddress.isEmpty()) {
-            throw new BadRequestException("Address with id " + addressId + " doesn't exist");
+    @Transactional
+    public AddressInfoDTO editAddress(String addressName, Integer id) {
+        Address address = getAddressById(id);
+        if(addressRepository.existsByAddressName(addressName)) {
+            throw new BadRequestException("Address " + addressName +" is already exist");
         }
-        Optional<User> owner = userRepository.findByAddressNames(existedAddress);
-        if (!owner.isPresent()) {
-            throw new BadRequestException("Address not found");
-        }
-        if (loggedId != owner.get().getId()) {
-            throw new BadRequestException("Address with id " + addressId + " doesn't exist in your profile");
-        }
-        Address address = existedAddress.get();
         address.setAddressName(addressName);
-        Address updatedAddress = addressRepository.save(address);
-        return new AddressInfoDTO(updatedAddress.getAddressName());
+        addressRepository.save(address);
+        return mapper.map(address, AddressInfoDTO.class);
     }
 
 }

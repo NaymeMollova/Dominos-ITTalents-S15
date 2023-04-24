@@ -2,7 +2,6 @@ package ittalents.dominos.controller;
 import ittalents.dominos.model.DTOs.*;
 import ittalents.dominos.service.UserService;
 import jakarta.servlet.http.HttpSession;
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,13 +16,11 @@ public class UserController extends AbstractController {
 
 
     @PostMapping("/dominos/users")
-    @Transactional
     public UserWithoutPassDTO register(@Valid @RequestBody UserRegisterDTO dto) {
         return userService.register(dto);
     }
 
     @PostMapping("/dominos/users/login")
-    @Transactional
     public UserWithoutPassDTO login(@RequestBody UserLoginDTO dto, HttpSession s) {
         UserWithoutPassDTO respDto = userService.login(dto);
         s.setAttribute("LOGGED", true);
@@ -32,13 +29,11 @@ public class UserController extends AbstractController {
     }
 
     @PostMapping("/dominos/users/logout")
-    @Transactional
     public void logout(HttpSession s) {
         getLoggedId(s);
         s.invalidate();
     }
     @PutMapping("/dominos/users/profile")
-    @Transactional
     public UserWithoutPassDTO edit(@Valid @RequestBody UserEditDTO dto, HttpSession s) {
         int userId = getLoggedId(s);
         UserWithoutPassDTO userWithoutPassDTO = userService.edit(userId, dto);
@@ -53,14 +48,14 @@ public class UserController extends AbstractController {
 
 
     @PutMapping("/dominos/users/password")
-    @Transactional
     public UserWithoutPassDTO changePassword(@Valid @RequestBody UserChangePasswordDTO dto, HttpSession s){
         int userId = getLoggedId(s);
         UserWithoutPassDTO userWithoutPassDTO = userService.changePassword(userId, dto);
         return userWithoutPassDTO;
     }
     @GetMapping("/dominos/users")
-    public List<UserWithoutPassDTO> getAll() {
+    public List<UserWithoutPassDTO> getAll(HttpSession session) {
+        isAdminLoggedIn(session);
         return userService.getAll();
     }
 }

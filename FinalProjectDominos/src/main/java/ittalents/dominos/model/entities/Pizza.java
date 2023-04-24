@@ -3,9 +3,9 @@ package ittalents.dominos.model.entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.math.BigDecimal;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Setter
@@ -21,7 +21,6 @@ public class Pizza {
     private BigDecimal price;
     @Column(name = "image")
     private String image;
-
     @ManyToMany
     @JoinTable(
             name = "pizza_have_ingredients",
@@ -30,8 +29,16 @@ public class Pizza {
     )
     private Set<Ingredient> ingredients = new HashSet<>();
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Pizza pizza = (Pizza) o;
+        return id == pizza.id;
+    }
 
-
-
-
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

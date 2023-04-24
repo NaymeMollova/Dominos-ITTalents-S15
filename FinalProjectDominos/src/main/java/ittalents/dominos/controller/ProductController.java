@@ -19,14 +19,12 @@ public class ProductController extends AbstractController {
     private ProductService productService;
 
     @PostMapping("/dominos/products")
-    @Transactional
     public ProductWithoutImageDTO addProduct(@Valid @RequestBody ProductWithoutImageDTO dto, HttpSession s) {
         isAdminLoggedIn(s);
         return productService.addProduct(dto);
     }
 
     @DeleteMapping("/dominos/products/{id}")
-    @Transactional
     public void deleteProduct(@PathVariable int id, HttpSession s){
         isAdminLoggedIn(s);
         productService.deleteProduct(id);
@@ -39,8 +37,7 @@ public class ProductController extends AbstractController {
     }
 
     @PutMapping("/dominos/products/{id}")
-    @Transactional
-    public ProductEditDTO editProduct(@Valid @PathVariable int id,@RequestBody ProductEditDTO dto , HttpSession s){
+    public ProductEditDTO editProduct(@Valid @RequestBody ProductEditDTO dto , @PathVariable int id,HttpSession s){
         isAdminLoggedIn(s);
         String name = dto.getName();
         BigDecimal price = dto.getPrice();

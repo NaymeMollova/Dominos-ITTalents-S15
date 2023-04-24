@@ -4,6 +4,7 @@ import ittalents.dominos.model.DTOs.*;
 import ittalents.dominos.model.entities.User;
 import ittalents.dominos.model.exceptions.BadRequestException;
 import ittalents.dominos.model.exceptions.UnauthorizedException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ public class UserService extends AbstractService {
     @Autowired
     private BCryptPasswordEncoder encoder;
 
-
+    @Transactional
     public UserWithoutPassDTO register(UserRegisterDTO register) {
         if(userRepository.existsByEmail(register.getEmail())){
             throw new BadRequestException("Email already exists!");
@@ -29,10 +30,11 @@ public class UserService extends AbstractService {
 
         User u = mapper.map(register, User.class);
         u.setPassword(encoder.encode(u.getPassword()));
-        //u.setAdmin(true);
+        u.setAdmin(false);
         userRepository.save(u);
         return mapper.map(u, UserWithoutPassDTO.class);
     }
+    @Transactional
     public UserWithoutPassDTO login(UserLoginDTO login){
         Optional<User> u = userRepository.getByEmail(login.getEmail());
         if(!u.isPresent()){
@@ -43,6 +45,7 @@ public class UserService extends AbstractService {
         }
         return mapper.map(u, UserWithoutPassDTO.class);
     }
+    @Transactional
     public UserWithoutPassDTO edit(int id, UserEditDTO dto){
         User user = getUserById(id);
                 user.setFirstName(dto.getFirstName());
@@ -57,21 +60,23 @@ public class UserService extends AbstractService {
             User user = getUserById(id);
                 return mapper.map(user, UserWithoutPassDTO.class);
         }
+        @Transactional
         public UserWithoutPassDTO changePassword(int id, UserChangePasswordDTO dto) {
             User user = getUserById(id);
             user.setPassword(encoder.encode(dto.getNewPassword()));
             userRepository.save(user);
                 return mapper.map(user, UserWithoutPassDTO.class);
         }
+
         public List<UserWithoutPassDTO> getAll() {
-        return userRepository.findAll()
+            return userRepository.findAll()
                 .stream()
                 .map( u -> mapper.map(u, UserWithoutPassDTO.class))
                 .collect(Collectors.toList());
-    }
+         }
 
 
-    public User findLoggedUser(int userId) {
-        return userRepository.getReferenceById(userId);
-    }
+        public User findLoggedUser(int userId) {
+            return userRepository.getReferenceById(userId);
+        }
 }

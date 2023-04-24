@@ -44,17 +44,4 @@ public class OrderedPizza {
         this.doughType = doughType;
     }
 
-//    public OrderedPizza(Pizza pizza, Order order) {
-//        this.pizza = pizza;
-//        this.order = order;
-//    }
-
-//    public OrderedPizza(Pizza pizza, Order order, PizzaSize pizzaSize, DoughType doughType, BigDecimal price) {
-//        this.order = order;
-//        this.pizza = pizza;
-//        this.price = price;
-//        this.pizzaSize = pizzaSize;
-//        this.doughType = doughType;
-//    }
-    //public OrderedPizza(Pizza pizza, Order order, DoughType doughType, PizzaSize pizzaSize, BigDecimal.)
 }

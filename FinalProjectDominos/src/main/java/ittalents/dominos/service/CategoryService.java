@@ -15,11 +15,11 @@ import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
 public class CategoryService extends AbstractService {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    @Transactional
     public CategoryDTO addCategory(CategoryDTO categoryDTO) {
         if(categoryRepository.existsByName(categoryDTO.getName())){
             throw new BadRequestException("Category with name " + categoryDTO.getName() + " already exists!");
@@ -35,6 +35,7 @@ public class CategoryService extends AbstractService {
         return mapper.map(category, CategoryDTO.class);
     }
 
+    @Transactional
     public CategoryDTO editCategory(int id, CategoryDTO categoryDTO) {
         Category category = getCategoryById(id);
         if(categoryRepository.existsByName(categoryDTO.getName())){
@@ -51,7 +52,7 @@ public class CategoryService extends AbstractService {
                 .map(category -> mapper.map(category, CategoryDTO.class))
                 .collect(Collectors.toList());
     }
-
+    @Transactional
     public void deleteCategory(int id) {
         Category category = getCategoryById(id);
         categoryRepository.deleteById(id);

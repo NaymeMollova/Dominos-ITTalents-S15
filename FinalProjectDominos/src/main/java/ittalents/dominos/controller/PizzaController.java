@@ -1,11 +1,8 @@
 package ittalents.dominos.controller;
 
 import ittalents.dominos.model.DTOs.PizzaDTO;
-import ittalents.dominos.model.DTOs.PizzaSizeDTO;
 import ittalents.dominos.model.entities.DoughType;
 import ittalents.dominos.model.entities.PizzaSize;
-import ittalents.dominos.model.exceptions.NotFoundException;
-import ittalents.dominos.model.repositories.PizzaRepository;
 import ittalents.dominos.service.PizzaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
