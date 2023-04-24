@@ -26,7 +26,7 @@ public  class ItemInCartInfoDTO {
         this.price= price;
         this.quantity=value;
         if(isPizza){
-        this.name = String.format("%s Pizza %s from %s dough", pizzaSize.getName(), name,doughType.getName());
+           this.name = String.format("%s %s от %s тесто", pizzaSize.getName(), name,doughType.getName());
         } else {
             this.name=name;
         }

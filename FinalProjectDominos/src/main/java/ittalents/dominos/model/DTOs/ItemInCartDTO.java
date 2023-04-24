@@ -25,7 +25,6 @@ public class ItemInCartDTO {
     private PizzaSize pizzaSize = null;
     private String pizzaSizeName = null;
 
-    //uses to convert product into ItemInCartDTO (takeRequestedProduct)
     public ItemInCartDTO(int id, BigDecimal price, boolean b, String name) {
         this.isPizza = b;
         this.name = name;
@@ -35,7 +34,6 @@ public class ItemInCartDTO {
     }
 
 
-    //uses to convert pizza into ItemInCartDTO (takeRequestedPizza)
     public ItemInCartDTO(int id, BigDecimal price, boolean b,
                          PizzaSize pizzaSize, DoughType doughType,
                          Pizza pizza, String pizzaSizeName, String name) {
@@ -48,7 +46,6 @@ public class ItemInCartDTO {
         this.pizzaSizeName = pizzaSizeName;
         this.name = name;
     }
-
 
     @Override
     public boolean equals(Object o) {
@@ -82,7 +79,7 @@ public class ItemInCartDTO {
         if (!isPizza) {
             return name;
         } else {
-            return String.format("%s pizza %s from %s dough", this.pizzaSize.getName(), this.name, this.doughType);
+            return String.format("%s %s от %s тесто", this.pizzaSize.getName(), this.name, this.doughType);
         }
     }
 }
