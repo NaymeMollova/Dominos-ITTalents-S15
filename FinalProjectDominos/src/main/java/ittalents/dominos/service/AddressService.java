@@ -18,9 +18,8 @@ public class AddressService extends AbstractService {
     @Autowired
     private AddressRepository addressRepository;
 
-    public boolean isAddressValid(String address) {
+    public void isAddressValid(String address) {
         throwExceptionIfAddressInvalid(address);
-        return true;
     }
 
     @Transactional
@@ -29,22 +28,11 @@ public class AddressService extends AbstractService {
         checkIfAddressNameExistsInProfile(addressName, loggedId);
         Address a = new Address();
         a.setAddressName(addressName);
-
-        ((Address) a).setAddressName(addressName);
-        a.setOwner(findLoggedUser(loggedId));
+        a.setUser(findLoggedUser(loggedId));
         addressRepository.save(a);
         return new AddressInfoDTO(a.getAddressName());
     }
-//    @Transactional
-//    public AddressInfoDTO saveAddress(String loggedId, Address addressName, String pathId) {
-//        if (!loggedId.equals(pathId)){
-//            throw new UnauthorizedException("You have to log is as user with id "+ pathId);
-//        }
-////        isAddressValid(addressName.getAddress());
-////        checkIfAddressAlreadyExists(addressName.getAddress());
-//        Address a = addressRepository.save(addressName);
-//        return new AddressInfoDTO(a.getAddressName());
-//    }
+
 
     public IllegalArgumentException throwExceptionIfAddressInvalid(String address) {
         // Check that the address string is not empty
@@ -73,14 +61,14 @@ public class AddressService extends AbstractService {
     public void checkIfAddressNameExistsInProfile(String address, int loggedId) {
         Optional<Address> existingAddress = addressRepository.findByAddressName(address);
         if (existingAddress.isPresent()) {
-            if (existingAddress.get().getOwner().getId() == loggedId) {
+            if (existingAddress.get().getUser().getId() == loggedId) {
                 throw new BadRequestException("Address already exists in your profile");
             }
         }
     }
 
-    public List<Address> getAllAddressesByOwner(int id) {
-        return addressRepository.findAllByOwner(findLoggedUser(id));
+    public List<Address> getAllAddressesByUser(int id) {
+        return addressRepository.findAllByUser(findLoggedUser(id));
     }
 
     public AddressInfoDTO deleteAddress(int loggedId, int addressId) {

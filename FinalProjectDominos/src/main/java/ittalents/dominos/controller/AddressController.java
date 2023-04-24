@@ -32,7 +32,7 @@ public class AddressController extends AbstractController {
     @GetMapping("/dominos/addresses")
     public List<AddressInfoDTO> getAllAddressesOfLoggedUser(HttpSession session) {
         getLoggedId(session);
-        List<Address> addresses = addressService.getAllAddressesByOwner(getLoggedId(session));
+        List<Address> addresses = addressService.getAllAddressesByUser(getLoggedId(session));
         return addresses.stream()
                 .map(address -> new AddressInfoDTO(address.getAddressName()))
                 .collect(Collectors.toList());

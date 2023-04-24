@@ -26,8 +26,7 @@ public class User {
     private String email;
     @Column(name = "is_admin")
     private boolean isAdmin;
-
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "user")
     private List<Address> addressNames;
 
 

@@ -16,7 +16,7 @@ public class Address {
     private String addressName;
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User owner;
+    private User user;
 
 
 

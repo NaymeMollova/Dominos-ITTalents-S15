@@ -28,7 +28,7 @@ public class Order {
 
     @ManyToOne
     @JoinColumn(name = "order_status_id")
-    private OrderStatus orderStatusId;
+    private OrderStatus orderStatus;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -46,15 +46,13 @@ public class Order {
     public Order( BigDecimal price,User user, OrderStatus orderStatus, Address address) {
         this.user = user;
         this.price = price;
-        this.orderStatusId=orderStatus;
+        this.orderStatus=orderStatus;
         this.address=address;
         this.orderingTime = LocalDateTime.now();
 
     }
 
-
-//    public Order(Map<ItemInCartDTO, Integer> items, int userId, double price){
-//        this.OrderedProducts=items;
-//
-//    }
+    public void setOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus=orderStatus;
+    }
 }

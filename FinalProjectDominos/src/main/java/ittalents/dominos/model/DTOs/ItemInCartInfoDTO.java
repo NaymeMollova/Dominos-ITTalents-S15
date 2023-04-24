@@ -2,26 +2,27 @@ package ittalents.dominos.model.DTOs;
 
 import ittalents.dominos.model.entities.DoughType;
 import ittalents.dominos.model.entities.PizzaSize;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
 
 @Setter
 @Getter
-
+@AllArgsConstructor
+@NoArgsConstructor
 public  class ItemInCartInfoDTO {
+    private int id;
     private String name;
     private BigDecimal price;
     private int quantity;
 
-    // private int id;
-   // private static int idCount=0;
-
-    public ItemInCartInfoDTO(String name, BigDecimal price, Integer value,
+    public ItemInCartInfoDTO(int id,String name, BigDecimal price, Integer value,
                              DoughType doughType, PizzaSize pizzaSize, boolean isPizza ) {
 
-
+        this.id=id;
         this.price= price;
         this.quantity=value;
         if(isPizza){

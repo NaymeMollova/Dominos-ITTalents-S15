@@ -15,86 +15,74 @@ import java.util.Objects;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class ItemInCartDTO {
-        private int id;
-        private String name;
-        private BigDecimal price;
-        private boolean isPizza;
+    private int id;
+    private String name;
+    private BigDecimal price;
+    private boolean isPizza;
+    private Pizza pizza = null;
+    private DoughType doughType = null;
+    private PizzaSize pizzaSize = null;
+    private String pizzaSizeName = null;
 
-        private Pizza pizza;
-        private DoughType doughType;
-        private PizzaSize pizzaSize;
-        private String pizzaSizeName;
+    //uses to convert product into ItemInCartDTO (takeRequestedProduct)
+    public ItemInCartDTO(int id, BigDecimal price, boolean b, String name) {
+        this.isPizza = b;
+        this.name = name;
+        this.id = id;
+        this.price = price;
 
-        public ItemInCartDTO(int id, BigDecimal price, boolean b) {
-                this.isPizza=b;
-                if (this.isPizza){
-                         this.id = id;
-                this.price = price;
-                }
+    }
+
+
+    //uses to convert pizza into ItemInCartDTO (takeRequestedPizza)
+    public ItemInCartDTO(int id, BigDecimal price, boolean b,
+                         PizzaSize pizzaSize, DoughType doughType,
+                         Pizza pizza, String pizzaSizeName, String name) {
+        this.id = id;
+        this.price = price;
+        this.isPizza = b;
+        this.doughType = doughType;
+        this.pizzaSize = pizzaSize;
+        this.pizza = pizza;
+        this.pizzaSizeName = pizzaSizeName;
+        this.name = name;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
         }
-
-        public ItemInCartDTO(int id, String name, BigDecimal price, boolean b) {
-                this.id = id;
-                this.price = price;
-                this.isPizza=b;
-                this.name=name;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
         }
-
-        public ItemInCartDTO(int id, BigDecimal price, boolean b, PizzaSize pizzaSize, DoughType doughType, Pizza pizza,String pizzaSizeName) {
-                this.id = id;
-                this.price = price;
-                this.isPizza=b;
-                this.doughType=doughType;
-                this.pizzaSize=pizzaSize;
-                this.pizza=pizza;
-                this.pizzaSizeName=pizzaSizeName;
+        ItemInCartDTO that = (ItemInCartDTO) o;
+        if (!isPizza) {
+            return Objects.equals(id, that.id) &&
+                    Objects.equals(isPizza, that.isPizza);
         }
+        return Objects.equals(id, that.id) &&
+                Objects.equals(isPizza, that.isPizza) &&
+                Objects.equals(pizzaSize.getId(), that.pizzaSize.getId()) &&
+                Objects.equals(doughType.getId(), that.doughType.getId());
+    }
 
-
-        public ItemInCartDTO(int id, String name, BigDecimal price, boolean b,
-                             PizzaSize pizzaSize, DoughType doughType, Pizza pizza,String pizzaSizeName) {
-                this.id = id;
-                this.price = price;
-                this.name=name;
-                this.isPizza=b;
-                this.doughType=doughType;
-                this.pizzaSize=pizzaSize;
-                this.pizza=pizza;
-                this.pizzaSizeName=pizzaSizeName;
-
+    @Override
+    public int hashCode() {
+        if (!isPizza) {
+            return Objects.hash(id);
         }
+        return Objects.hash(id, doughType.getId(), pizzaSize.getId());
+    }
 
-        @Override
-        public boolean equals(Object o) {
-                ItemInCartDTO that = (ItemInCartDTO) o;
-//                if(!isPizza) {
-//                        if (o == null || getClass() != o.getClass()) return false;
-//                        return Objects.equals(id, that.id);
-//                }
-                return  Objects.equals(id, that.id) &&
-                        Objects.equals(isPizza, that.isPizza)&&
-                        Objects.equals(pizzaSize.getId(), that.pizzaSize.getId()) &&
-                        Objects.equals(doughType.getId(), that.doughType.getId());
+    @Override
+    public String toString() {
+        if (!isPizza) {
+            return name;
+        } else {
+            return String.format("%s pizza %s from %s dough", this.pizzaSize.getName(), this.name, this.doughType);
         }
-
-        @Override
-        public int hashCode() {
-                if (!isPizza) {
-                        return Objects.hash(id);
-                }
-                        return Objects.hash(id, doughType.getId(),pizzaSize.getId());
-
-        }
-
-        @Override
-        public String toString() {
-                if(!isPizza){
-                        return name;
-                }
-                else{
-                        return String.format("%s pizza %s from %s dough", this.pizzaSize.getName(),this.name,this.doughType);
-                }
-        }
+    }
 }
