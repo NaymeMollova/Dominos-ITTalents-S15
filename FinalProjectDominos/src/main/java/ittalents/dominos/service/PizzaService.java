@@ -2,40 +2,25 @@ package ittalents.dominos.service;
 
 import ittalents.dominos.model.DTOs.PizzaDTO;
 import ittalents.dominos.model.entities.DoughType;
-import ittalents.dominos.model.entities.Ingredient;
 import ittalents.dominos.model.entities.Pizza;
 import ittalents.dominos.model.entities.PizzaSize;
-import ittalents.dominos.model.exceptions.NotFoundException;
-import ittalents.dominos.model.repositories.IngredientRepository;
-import ittalents.dominos.model.repositories.PizzaDoughTypeRepository;
-import ittalents.dominos.model.repositories.PizzaRepository;
+import ittalents.dominos.model.repositories.DoughTypeRepository;
 import ittalents.dominos.model.repositories.PizzaSizeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PizzaService extends AbstractService {
 
     @Autowired
-    private PizzaRepository pizzaRepository;
-    @Autowired
     private PizzaSizeRepository pizzaSizeRepository;
     @Autowired
-    private PizzaDoughTypeRepository pizzaDoughTypeRepository;
+    private DoughTypeRepository pizzaDoughTypeRepository;
 
-    public PizzaDTO getPizzaById(int id) {
-        // Търсене на пица в базата данни
-        Optional<Pizza> optionalPizza = pizzaRepository.findById(id);
-
-        // Проверка дали пицата съществува
-        if (!optionalPizza.isPresent()) {
-            throw new NotFoundException("Пица с ID " + id + " не беше намерена.");
-        }
-        Pizza pizza = optionalPizza.get();
+    public PizzaDTO getPizza(int id) {
+        Pizza pizza = getPizzaById(id);
         return mapper.map(pizza, PizzaDTO.class);
     }
 

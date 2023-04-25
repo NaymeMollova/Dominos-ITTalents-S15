@@ -1,5 +1,6 @@
 package ittalents.dominos.controller;
 
+import ittalents.dominos.model.DTOs.PizzaDTO;
 import ittalents.dominos.model.DTOs.ProductDTO;
 import ittalents.dominos.model.entities.Product;
 import ittalents.dominos.service.ImageService;
@@ -29,11 +30,23 @@ public class ImageController extends AbstractController {
         isAdminLoggedIn(s);
         return imageService.uploadImageProduct(id, file);
     }
+    @PostMapping("dominos/pizzas/{id}/image")
+    public PizzaDTO uploadImagePizza(@PathVariable int id, @RequestParam("file") MultipartFile file , HttpSession s){
+        isAdminLoggedIn(s);
+        return imageService.uploadImagePizza(id, file);
+    }
 
     @SneakyThrows
-    @GetMapping("dominos/image/{fileName}")
-    public void download(@PathVariable("fileName") String fileName, HttpServletResponse resp){
-        File f = imageService.download(fileName);
+    @GetMapping("dominos/products/image/{fileName}")
+    public void downloadProduct(@PathVariable("fileName") String fileName, HttpServletResponse resp){
+        File f = imageService.downloadProduct(fileName);
         Files.copy(f.toPath(), resp.getOutputStream());
     }
+    @SneakyThrows
+    @GetMapping("dominos/pizzas/image/{fileName}")
+    public void downloadPizza(@PathVariable("fileName") String fileName, HttpServletResponse resp){
+        File f = imageService.downloadPizza(fileName);
+        Files.copy(f.toPath(), resp.getOutputStream());
+    }
+
 }

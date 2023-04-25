@@ -1,6 +1,6 @@
 package ittalents.dominos.service;
 
-import ittalents.dominos.model.DTOs.CategoryWithoutIdDTO;
+import ittalents.dominos.model.DTOs.CategoryDTO;
 import ittalents.dominos.model.entities.Category;
 import ittalents.dominos.model.exceptions.BadRequestException;
 import ittalents.dominos.model.exceptions.NotFoundException;
@@ -11,66 +11,50 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 @Service
-@Transactional
 public class CategoryService extends AbstractService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    public Category saveCategory(Category categoryName) {
-        Optional<Category> existingCategory = categoryRepository.findByCategoryName(categoryName.getCategoryName());
-        if (existingCategory.isPresent()) {
-            throw new BadRequestException("Category already exists");
+    @Transactional
+    public CategoryDTO addCategory(CategoryDTO categoryDTO) {
+        if(categoryRepository.existsByName(categoryDTO.getName())){
+            throw new BadRequestException("Category with name " + categoryDTO.getName() + " already exists!");
         }
-        return categoryRepository.save(categoryName);
+        Category category = mapper.map(categoryDTO, Category.class);
+        category.setName(categoryDTO.getName());
+        categoryRepository.save(category);
+        return mapper.map(category, CategoryDTO.class);
     }
 
-    public Category findById(int id) {
-        Optional<Category> c = categoryRepository.findById(id);
-        if (c.isPresent()) {
-            return mapper.map(c.get(), Category.class);
-        } else {
-            throw new NotFoundException("Category not found");
+    public CategoryDTO viewCategory(int id) {
+        Category category = getCategoryById(id);
+        return mapper.map(category, CategoryDTO.class);
+    }
+
+    @Transactional
+    public CategoryDTO editCategory(int id, CategoryDTO categoryDTO) {
+        Category category = getCategoryById(id);
+        if(categoryRepository.existsByName(categoryDTO.getName())){
+            throw new BadRequestException("Category with name " + categoryDTO.getName() + " already exists.");
         }
+        category.setName(categoryDTO.getName());
+        categoryRepository.save(category);
+        return mapper.map(category, CategoryDTO.class);
     }
 
-    public CategoryWithoutIdDTO editCategory(int id, String newCategoryName) {
-        // Finding the category to be edited by its ID
-        Optional<Category> categoryOptional = categoryRepository.findById(id);
-        if (categoryOptional.isPresent()) {
-            Category category = categoryOptional.get();
-            // Checking if there's already a category with the new name
-            Optional<Category> existingCategoryOptional = categoryRepository.findByCategoryName(newCategoryName);
-            if (existingCategoryOptional.isPresent()) {
-                // Making sure it's not the same category we're editing
-                Category existingCategory = existingCategoryOptional.get();
-                if (existingCategory.getId() != category.getId()) {
-                    throw new BadRequestException("Category with name " + newCategoryName + " already exists.");
-                }
-            }
-            category.setCategoryName(newCategoryName);
-            Category updatedCategory = categoryRepository.save(category);
-            return new CategoryWithoutIdDTO(updatedCategory.getCategoryName());
-        }
-        throw new NotFoundException("Category with id " + id + " does not exist.");
+    public List<CategoryDTO> viewAllCategories() {
+        List<Category> categories = categoryRepository.findAll();
+        return categories.stream()
+                .map(category -> mapper.map(category, CategoryDTO.class))
+                .collect(Collectors.toList());
     }
-
-
-    public List<Category> findAllCategories() {
-        return categoryRepository.findAll();
-    }
-
-
-    public Category deleteCategory(int id) {
-        Category category = findById(id);
+    @Transactional
+    public void deleteCategory(int id) {
+        Category category = getCategoryById(id);
         categoryRepository.deleteById(id);
-        return category;
     }
 }
-
-
-
-
-
-

@@ -1,29 +1,29 @@
 package ittalents.dominos.service;
 
-
 import ittalents.dominos.model.DTOs.ProductDTO;
 import ittalents.dominos.model.DTOs.ProductEditDTO;
 import ittalents.dominos.model.DTOs.ProductWithoutImageDTO;
 import ittalents.dominos.model.entities.Category;
 import ittalents.dominos.model.entities.Product;
 import ittalents.dominos.model.exceptions.BadRequestException;
-import ittalents.dominos.model.exceptions.NotFoundException;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-@Transactional
 public class ProductService extends AbstractService {
 
+    @Transactional
     public ProductWithoutImageDTO addProduct(ProductWithoutImageDTO productDTO){
         Product product = new Product();
-        Category category = categoryRepository.findById(productDTO.getCategoryId())
-                .orElseThrow(() -> new NotFoundException("Category not found"));
+        Category category = getCategoryById(productDTO.getCategoryId());
+        if(productRepository.existsByName(productDTO.getName())){
+            throw new BadRequestException("Product with name " + productDTO.getName() + " already exists.");
+        }
 
         product.setName(productDTO.getName());
         product.setPrice(productDTO.getPrice());
@@ -32,6 +32,7 @@ public class ProductService extends AbstractService {
         return mapper.map(product, ProductWithoutImageDTO.class);
     }
 
+    @Transactional
     public void deleteProduct(int id){
         Product product = getProductById(id);
         productRepository.deleteById(id);
@@ -42,22 +43,22 @@ public class ProductService extends AbstractService {
         return mapper.map(product, ProductDTO.class);
     }
 
-    public ProductEditDTO editProduct(ProductEditDTO productEditDTO, int id) {
+    @Transactional
+    public ProductEditDTO editProduct(Integer id, String name, BigDecimal price) {
         Product product = getProductById(id);
-        product.setName(productEditDTO.getName());
-        product.setPrice(productEditDTO.getPrice());
+        if(productRepository.existsByName(name)){
+            throw new BadRequestException("Product with name " + name + " already exists.");
+        }
+        product.setName(name);
+        product.setPrice(price);
         productRepository.save(product);
         return mapper.map(product, ProductEditDTO.class);
+
     }
     public List<ProductDTO> viewProductsByCategory(int id) {
-        Category category = getCategoryById(id);
         return productRepository.findByCategory(getCategoryById(id))
                 .stream()
                 .map(product -> mapper.map(product, ProductDTO.class))
                 .collect(Collectors.toList());
     }
-
-
-
-
 }

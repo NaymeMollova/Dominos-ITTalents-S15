@@ -1,38 +1,47 @@
 package ittalents.dominos.model.entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
 
 @Setter
 @Getter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity(name = "ordered_pizzas")
 public class OrderedPizza {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    //TODO
-    //не знам, има ли нужда от колона price при положение че е сума от
-    // this.pizza.price+this.dough.type.price+this.pizza.size.price
-
-    //@Column(name = "price")
+    @Column(name = "price")
     private BigDecimal price;
 
     @ManyToOne
-    @JoinColumn(name = "orders")
+    @JoinColumn(name = "order_id")
     private Order order;
 
     @ManyToOne
-    @JoinColumn(name = "pizzas")
-    private Pizza pizzaName;
+    @JoinColumn(name = "pizza_id")
+    private Pizza pizza;
     @ManyToOne
-    @JoinColumn(name = "dough_type")
+    @JoinColumn(name = "dough_type_id")
     private DoughType doughType;
 
     @ManyToOne
-    @JoinColumn(name = "pizza_sizes")
+    @JoinColumn(name = "pizza_size_id")
     private PizzaSize pizzaSize;
+
+    public OrderedPizza(Order newOrder, BigDecimal price, PizzaSize pizzaSize, DoughType doughType, Pizza pizza) {
+        this.order = newOrder;
+        this.pizza = pizza;
+        this.price = price;
+        this.pizzaSize = pizzaSize;
+        this.doughType = doughType;
+    }
+
 }

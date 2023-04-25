@@ -17,10 +17,7 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @Column(name = "category_name")
-    private String categoryName;
-
-    //cascade - указва, че при изтриване на категория всички продукти ще се изтрият
-   // @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    @OneToMany(mappedBy = "category")
+    private String name;
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
     private List<Product> products;
 }

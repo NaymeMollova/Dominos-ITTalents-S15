@@ -1,7 +1,6 @@
 package ittalents.dominos.controller;
 
 import ittalents.dominos.model.DTOs.ErrorDTO;
-import ittalents.dominos.model.entities.User;
 import ittalents.dominos.model.exceptions.BadRequestException;
 import ittalents.dominos.model.exceptions.NotFoundException;
 import ittalents.dominos.model.exceptions.UnauthorizedException;
@@ -19,24 +18,30 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class AbstractController {
+    public static final String CART = "CART";
     @Autowired
     protected UserService userService;
 
+
+
     @ExceptionHandler(BadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorDTO handleBadRequest(Exception e){
+    public ErrorDTO handleBadRequest(Exception e) {
+        e.printStackTrace();
         return generateErrorDTO(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(UnauthorizedException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ErrorDTO handleUnauthorized(Exception e){
+    public ErrorDTO handleUnauthorized(Exception e) {
+        e.printStackTrace();
         return generateErrorDTO(e.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorDTO handleNotFound(Exception e){
+    public ErrorDTO handleNotFound(Exception e) {
+        e.printStackTrace();
         return generateErrorDTO(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
@@ -44,10 +49,12 @@ public abstract class AbstractController {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorDTO handleRest(Exception e) {
+        e.printStackTrace();
         return generateErrorDTO(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     private ErrorDTO generateErrorDTO(Object o, HttpStatus s) {
+
         return ErrorDTO.builder()
                 .msg(o)
                 .time(LocalDateTime.now())
@@ -66,40 +73,21 @@ public abstract class AbstractController {
         return generateErrorDTO(errors, HttpStatus.BAD_REQUEST);
     }
 
-    protected boolean isAdminLoggedIn(HttpSession session) {
-        if (!isUserLoggedIn(session)) {
-            throw new UnauthorizedException("You have to log in first");
-        }
+    protected void isAdminLoggedIn(HttpSession session) {
+        getLoggedId(session);
         int userId = (int) session.getAttribute("LOGGED_ID");
         if (!userService.findLoggedUser(userId).isAdmin()) {
-            return false;
+            throw new UnauthorizedException("You are not admin");
         }
-        return true;
     }
 
-    protected boolean isUserLoggedIn(HttpSession session) {
-        if (!isThereLoggedInUser(session)) {
-            return false;
-        }
-        int userId = (int) session.getAttribute("LOGGED_ID");
-        if (userService.findLoggedUser(userId) == null) {
-            return false;
-        }
-        return true;
-    }
-
-    private boolean isThereLoggedInUser(HttpSession session) {
-        if (session.getAttribute("LOGGED") == null) {
-            return false;
-        }
-        return true;
-    }
-    protected int getLoggedId(HttpSession s){
-        if(s.getAttribute("LOGGED_ID") == null){
+    protected int getLoggedId(HttpSession s) {
+        if (s.getAttribute("LOGGED_ID") == null) {
             throw new UnauthorizedException("You have to login first");
         }
         return (int) s.getAttribute("LOGGED_ID");
     }
+
 
 }
 

@@ -1,69 +1,48 @@
 package ittalents.dominos.controller;
 
+import ittalents.dominos.model.DTOs.AddressEditDTO;
+import ittalents.dominos.model.DTOs.AddressInfoDTO;
 import ittalents.dominos.service.AddressService;
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
 
 @RestController
 public class AddressController extends AbstractController {
     @Autowired
     private AddressService addressService;
 
-    //ADD ADDRESS
-//    @PostMapping("/dominos/addresses")
-//    public AddressInfoDTO addAddress(HttpSession session, @RequestBody AddressInfoDTO newAddress) {
-//        //if user loggedIn
-//        try {
-//            isAddressValid(newAddress.getAddress());
-//        }
-//
-//        //if it doesn`t exist yet
-//        //save it
-//    }
-
-
-    //EDIT ADDRESS
-    //  @DeleteMapping("/dominos/addresses")
-
-    //VIEW ADDRESSES
-    //  @GetMapping("/dominos/addresses")
-
-
-    //EDIT ADDRESSES
-    //  @PutMapping("/dominos/addresses/{id}")
-
-
-    private IllegalArgumentException isAddressValid(String address) {
-        // Check that the address string is not empty
-        if (address == null || address.trim().isEmpty()) {
-            throw new IllegalArgumentException("Address cannot be empty");
-        }
-
-        // Check that the address does not contain special characters such as @, #, $, etc.
-        if (!address.matches("^[a-zA-Z0-9\\s\\-.,\\/]{1,255}$")) {
-            throw new IllegalArgumentException("Address contains invalid characters");
-        }
-
-        // Check that the address does not contain HTML tags or other formatting
-        if (address.matches(".*<(\"[^\"]*\"|'[^']*'|[^'\">])*>.*")) {
-            throw new IllegalArgumentException("Address contains HTML tags or other formatting");
-        }
-
-        // Check that the address starts with a letter or number and does not end with a space
-        if (!address.matches("^[a-zA-Z0-9].*[a-zA-Z0-9\\s\\-.,\\/]$")) {
-            throw new IllegalArgumentException("Address starts with invalid characters or ends with a space");
-        }
-
-        // Check that the address contains at least one word or number separated from other characters by spaces or punctuation marks
-        if (!address.matches(".*[a-zA-Z0-9]+.*")) {
-            throw new IllegalArgumentException("Address must contain at least one word or number");
-        }
-
-        // Check that the address is not too short or too long, usually limited to 255 characters
-        if (address.length() > 255) {
-            throw new IllegalArgumentException("Address is too long");
-        }
-        return null;
+    @PostMapping("/dominos/addresses")
+    public AddressInfoDTO addAddress(@Valid @RequestBody AddressInfoDTO addressInfoDTO, HttpSession session) {
+        getLoggedId(session);
+        return addressService.addAddress(addressInfoDTO);
     }
+
+    @DeleteMapping("/dominos/addresses/{id}")
+    public void deleteAddress(HttpSession session, @PathVariable("id") int addressId) {
+        getLoggedId(session);
+        addressService.deleteAddress(addressId);
+    }
+
+    @GetMapping("/dominos/addresses")
+    public List<AddressInfoDTO> getAllAddressesOfLoggedUser(HttpSession session) {
+        getLoggedId(session);
+        return addressService.getAllAddressesByUser(getLoggedId(session));
+    }
+
+    @PutMapping("/dominos/addresses/{id}")
+    public AddressEditDTO editAddress(@Valid @RequestBody AddressInfoDTO newAddress, HttpSession session, @PathVariable int id){
+        getLoggedId(session);
+        String name = newAddress.getAddressName();
+        AddressInfoDTO updateAddress = addressService.editAddress(name, id);
+        return new AddressEditDTO(id, updateAddress.getAddressName());
+    }
+
+
+
 
 }
